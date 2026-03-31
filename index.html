@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeQuest - Learn to Code</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-dark: #0f1117;
+            --bg-card: #1a1d2e;
+            --bg-editor: #12141f;
+            --bg-sidebar: #151825;
+            --accent: #6c5ce7;
+            --accent-glow: rgba(108, 92, 231, 0.3);
+            --green: #00b894;
+            --green-glow: rgba(0, 184, 148, 0.3);
+            --yellow: #fdcb6e;
+            --red: #e17055;
+            --text: #dfe6e9;
+            --text-dim: #636e72;
+            --border: #2d3436;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Top Bar */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+            background: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border);
+            height: 60px;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .topbar-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text-dim);
+        }
+
+        .stat-value {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .xp-bar-container {
+            width: 120px;
+            height: 8px;
+            background: var(--bg-dark);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), #a29bfe);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .streak-badge {
+            background: linear-gradient(135deg, #e17055, #fdcb6e);
+            color: #000;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+            padding: 0 16px;
+            padding-top: 12px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .nav-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .lesson-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .lesson-item:hover { background: rgba(108, 92, 231, 0.1); }
+        .lesson-item.active { background: rgba(108, 92, 231, 0.2); border: 1px solid var(--accent); }
+        .lesson-item.completed .lesson-icon { background: var(--green); }
+        .lesson-item.locked { opacity: 0.4; cursor: not-allowed; }
+
+        .lesson-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .lesson-info { flex: 1; }
+        .lesson-name { font-size: 13px; font-weight: 600; }
+        .lesson-xp { font-size: 11px; color: var(--text-dim); }
+
+        /* Challenge items */
+        .challenge-item {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .challenge-item:hover { border-color: var(--accent); }
+        .challenge-item.completed { border-color: var(--green); }
+
+        .challenge-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+        .challenge-desc { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; }
+
+        .challenge-reward {
+            display: inline-block;
+            background: rgba(253, 203, 110, 0.15);
+            color: var(--yellow);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .difficulty.easy { background: rgba(0, 184, 148, 0.15); color: var(--green); }
+        .difficulty.medium { background: rgba(253, 203, 110, 0.15); color: var(--yellow); }
+        .difficulty.hard { background: rgba(225, 112, 85, 0.15); color: var(--red); }
+
+        /* Achievement items in sidebar */
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .achievement-item.unlocked {
+            border-color: var(--yellow);
+            background: rgba(253, 203, 110, 0.05);
+        }
+
+        .achievement-item.locked { opacity: 0.35; }
+
+        .achievement-icon {
+            font-size: 24px;
+            width: 36px;
+            text-align: center;
+        }
+
+        .achievement-item.locked .achievement-icon { filter: grayscale(1); }
+
+        .achievement-name { font-size: 13px; font-weight: 600; }
+        .achievement-desc { font-size: 11px; color: var(--text-dim); }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Lesson Content */
+        .lesson-panel {
+            padding: 32px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .lesson-header {
+            margin-bottom: 24px;
+        }
+
+        .lesson-chapter {
+            font-size: 12px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .lesson-title {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .lesson-body {
+            font-size: 15px;
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        .lesson-body p { margin-bottom: 16px; }
+
+        .lesson-body code {
+            background: var(--bg-editor);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 14px;
+            color: #a29bfe;
+        }
+
+        .lesson-body pre {
+            background: var(--bg-editor);
+            padding: 16px;
+            border-radius: 8px;
+            margin: 16px 0;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+        }
+
+        .lesson-body pre code {
+            background: none;
+            padding: 0;
+            color: var(--text);
+        }
+
+        .lesson-body .highlight { color: var(--yellow); font-weight: 600; }
+        .lesson-body .concept { color: var(--accent); font-weight: 600; }
+
+        /* Editor Section */
+        .editor-section {
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            height: 45%;
+            min-height: 250px;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .editor-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border-radius: 8px;
+            border: none;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-run {
+            background: var(--green);
+            color: #000;
+        }
+        .btn-run:hover { box-shadow: 0 0 20px var(--green-glow); }
+
+        .btn-submit {
+            background: var(--accent);
+            color: white;
+        }
+        .btn-submit:hover { box-shadow: 0 0 20px var(--accent-glow); }
+
+        .btn-reset {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+        }
+        .btn-reset:hover { border-color: var(--text); color: var(--text); }
+
+        .btn-hint {
+            background: transparent;
+            border: 1px solid var(--yellow);
+            color: var(--yellow);
+        }
+
+        .editor-main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .code-editor {
+            flex: 1;
+            position: relative;
+        }
+
+        .code-editor textarea {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-editor);
+            color: var(--text);
+            border: none;
+            padding: 16px;
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+            tab-size: 4;
+        }
+
+        .output-panel {
+            width: 40%;
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .output-header {
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .output-content {
+            flex: 1;
+            padding: 16px;
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 13px;
+            overflow-y: auto;
+            background: var(--bg-editor);
+            white-space: pre-wrap;
+        }
+
+        .output-content .error { color: var(--red); }
+        .output-content .success { color: var(--green); }
+
+        /* Result Banner */
+        .result-banner {
+            display: none;
+            padding: 16px 24px;
+            align-items: center;
+            gap: 12px;
+            animation: slideUp 0.3s ease;
+        }
+
+        .result-banner.show { display: flex; }
+        .result-banner.pass { background: rgba(0, 184, 148, 0.15); border-top: 2px solid var(--green); }
+        .result-banner.fail { background: rgba(225, 112, 85, 0.15); border-top: 2px solid var(--red); }
+
+        .result-icon { font-size: 28px; }
+        .result-text { flex: 1; }
+        .result-title { font-weight: 700; font-size: 16px; }
+        .result-detail { font-size: 13px; color: var(--text-dim); }
+
+        .btn-next {
+            background: var(--green);
+            color: #000;
+            padding: 10px 24px;
+            font-weight: 700;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Achievement Popup */
+        .achievement-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-card);
+            border: 2px solid var(--yellow);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            z-index: 1000;
+            animation: popIn 0.4s ease;
+            box-shadow: 0 0 60px rgba(253, 203, 110, 0.2);
+        }
+
+        .achievement-popup.show { display: block; }
+
+        .achievement-popup-icon { font-size: 64px; margin-bottom: 16px; }
+        .achievement-popup-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--yellow);
+            margin-bottom: 8px;
+        }
+        .achievement-popup-name { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+        .achievement-popup-desc { color: var(--text-dim); margin-bottom: 20px; }
+        .achievement-popup-xp { color: var(--yellow); font-weight: 700; font-size: 18px; }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 999;
+        }
+        .overlay.show { display: block; }
+
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar { width: 220px; }
+            .output-panel { width: 35%; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+    <div class="topbar-left">
+        <div class="logo">CodeQuest</div>
+        <span id="levelBadge" class="stat">Level <span class="stat-value" id="levelNum">1</span></span>
+        <div class="xp-bar-container">
+            <div class="xp-bar-fill" id="xpBar" style="width: 0%"></div>
+        </div>
+        <span class="stat" id="xpLabel"><span class="stat-value" id="xpNum">0</span> / <span id="xpMax">100</span> XP</span>
+    </div>
+    <div class="topbar-stats">
+        <span class="stat">Completed: <span class="stat-value" id="completedCount">0</span></span>
+        <span class="stat">Achievements: <span class="stat-value" id="achievementCount">0</span></span>
+        <span id="streakBadge" class="streak-badge" style="display:none">0 streak</span>
+    </div>
+</div>
+
+<!-- Main Layout -->
+<div class="main-layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="nav-tabs">
+            <div class="nav-tab active" onclick="switchTab('lessons')">Lessons</div>
+            <div class="nav-tab" onclick="switchTab('challenges')">Challenges</div>
+            <div class="nav-tab" onclick="switchTab('achievements')">Trophies</div>
+        </div>
+        <div id="sidebarContent"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="content-area">
+        <div class="lesson-panel" id="lessonPanel"></div>
+
+        <div class="editor-section">
+            <div class="editor-toolbar">
+                <span class="editor-label">Code Editor</span>
+                <div class="editor-actions">
+                    <button class="btn btn-hint" onclick="showHint()">Hint</button>
+                    <button class="btn btn-reset" onclick="resetCode()">Reset</button>
+                    <button class="btn btn-run" onclick="runCode()">Run</button>
+                    <button class="btn btn-submit" onclick="submitCode()">Submit</button>
+                </div>
+            </div>
+            <div class="editor-main">
+                <div class="code-editor">
+                    <textarea id="codeInput" spellcheck="false" placeholder="// Write your code here..."></textarea>
+                </div>
+                <div class="output-panel">
+                    <div class="output-header">Output</div>
+                    <div class="output-content" id="outputContent"></div>
+                </div>
+            </div>
+            <div class="result-banner" id="resultBanner">
+                <span class="result-icon" id="resultIcon"></span>
+                <div class="result-text">
+                    <div class="result-title" id="resultTitle"></div>
+                    <div class="result-detail" id="resultDetail"></div>
+                </div>
+                <button class="btn btn-next" id="nextBtn" onclick="nextLesson()">Next Lesson</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Achievement Popup -->
+<div class="overlay" id="overlay"></div>
+<div class="achievement-popup" id="achievementPopup">
+    <div class="achievement-popup-icon" id="popupIcon"></div>
+    <div class="achievement-popup-title">Achievement Unlocked!</div>
+    <div class="achievement-popup-name" id="popupName"></div>
+    <div class="achievement-popup-desc" id="popupDesc"></div>
+    <div class="achievement-popup-xp" id="popupXp"></div>
+    <br>
+    <button class="btn btn-submit" onclick="closeAchievement()">Awesome!</button>
+</div>
+
+<script>
+// ==================== DATA ====================
+
+const lessons = [
+    {
+        id: 'hello',
+        chapter: 'Chapter 1: First Steps',
+        title: 'Hello, World!',
+        xp: 25,
+        body: `
+            <p>Every coder's journey starts with <span class="concept">printing</span> something to the screen.</p>
+            <p>In JavaScript, we use <code>console.log()</code> to print. Whatever you put inside the parentheses shows up in the output.</p>
+            <pre><code>console.log("Hello, World!")</code></pre>
+            <p>Text must be wrapped in <span class="highlight">quotes</span> — either <code>"double"</code> or <code>'single'</code>.</p>
+            <p><strong>Your task:</strong> Print <code>Hello, World!</code> to the output.</p>
+        `,
+        starter: '// Print "Hello, World!" below\n',
+        hint: 'Use console.log("Hello, World!")',
+        check(output) {
+            return output.trim().includes('Hello, World!');
+        }
+    },
+    {
+        id: 'variables',
+        chapter: 'Chapter 1: First Steps',
+        title: 'Variables: Storing Data',
+        xp: 30,
+        body: `
+            <p>A <span class="concept">variable</span> is like a labeled box that stores a value. You create one with <code>let</code>.</p>
+            <pre><code>let name = "Dylan"
+let age = 15
+let score = 99.5</code></pre>
+            <p><code>"Dylan"</code> is a <span class="highlight">string</span> (text). <code>15</code> is a <span class="highlight">number</span>.</p>
+            <p><strong>Your task:</strong> Create a variable called <code>greeting</code> that holds <code>"Hello!"</code>, then print it.</p>
+        `,
+        starter: '// Create a variable called greeting\n// Then print it with console.log()\n',
+        hint: 'let greeting = "Hello!"\nconsole.log(greeting)',
+        check(output) {
+            return output.trim() === 'Hello!';
+        }
+    },
+    {
+        id: 'math',
+        chapter: 'Chapter 1: First Steps',
+        title: 'Math with Numbers',
+        xp: 30,
+        body: `
+            <p>JavaScript can do math just like a calculator!</p>
+            <pre><code>let a = 10
+let b = 3
+console.log(a + b)  // 13
+console.log(a - b)  // 7
+console.log(a * b)  // 30
+console.log(a / b)  // 3.333...</code></pre>
+            <p>The symbols: <code>+</code> add, <code>-</code> subtract, <code>*</code> multiply, <code>/</code> divide.</p>
+            <p><strong>Your task:</strong> Create two variables <code>x</code> and <code>y</code>. Set <code>x</code> to <code>8</code> and <code>y</code> to <code>4</code>. Print <code>x * y</code>.</p>
+        `,
+        starter: '// Create x and y, then print x * y\n',
+        hint: 'let x = 8\nlet y = 4\nconsole.log(x * y)',
+        check(output) {
+            return output.trim() === '32';
+        }
+    },
+    {
+        id: 'strings',
+        chapter: 'Chapter 2: Data Types',
+        title: 'Playing with Strings',
+        xp: 35,
+        body: `
+            <p><span class="concept">Strings</span> are text. You can combine them with <code>+</code> — this is called <span class="highlight">concatenation</span>.</p>
+            <pre><code>let first = "Code"
+let second = "Quest"
+console.log(first + second)  // "CodeQuest"</code></pre>
+            <p>Want a space? Add it as a string: <code>first + " " + second</code></p>
+            <p><strong>Your task:</strong> Create <code>firstName</code> set to <code>"Super"</code> and <code>lastName</code> set to <code>"Coder"</code>. Print them together with a space in between.</p>
+        `,
+        starter: '// Combine firstName and lastName with a space\n',
+        hint: 'let firstName = "Super"\nlet lastName = "Coder"\nconsole.log(firstName + " " + lastName)',
+        check(output) {
+            return output.trim() === 'Super Coder';
+        }
+    },
+    {
+        id: 'if_else',
+        chapter: 'Chapter 2: Data Types',
+        title: 'Making Decisions: if/else',
+        xp: 40,
+        body: `
+            <p>Programs make decisions with <span class="concept">if statements</span>.</p>
+            <pre><code>let score = 85
+
+if (score >= 90) {
+    console.log("A grade!")
+} else if (score >= 80) {
+    console.log("B grade!")
+} else {
+    console.log("Keep trying!")
+}</code></pre>
+            <p>Comparison operators: <code>></code> greater, <code><</code> less, <code>>=</code> greater or equal, <code><=</code> less or equal, <code>===</code> exactly equals.</p>
+            <p><strong>Your task:</strong> Create a variable <code>temperature</code> set to <code>35</code>. If it's greater than 30, print <code>"It's hot!"</code>. Otherwise print <code>"It's cool."</code></p>
+        `,
+        starter: '// Check the temperature\nlet temperature = 35\n',
+        hint: 'if (temperature > 30) {\n    console.log("It\'s hot!")\n} else {\n    console.log("It\'s cool.")\n}',
+        check(output) {
+            return output.trim() === "It's hot!";
+        }
+    },
+    {
+        id: 'loops',
+        chapter: 'Chapter 3: Loops',
+        title: 'For Loops: Repeat Yourself',
+        xp: 45,
+        body: `
+            <p>A <span class="concept">for loop</span> repeats code a set number of times.</p>
+            <pre><code>for (let i = 0; i < 5; i++) {
+    console.log(i)
+}
+// Prints: 0, 1, 2, 3, 4</code></pre>
+            <p>Breaking it down:</p>
+            <p><code>let i = 0</code> — start at 0<br>
+            <code>i < 5</code> — keep going while i is less than 5<br>
+            <code>i++</code> — add 1 to i each time (same as <code>i = i + 1</code>)</p>
+            <p><strong>Your task:</strong> Write a for loop that prints the numbers <code>1</code> through <code>5</code> (each on its own line).</p>
+        `,
+        starter: '// Print numbers 1 through 5\n',
+        hint: 'for (let i = 1; i <= 5; i++) {\n    console.log(i)\n}',
+        check(output) {
+            return output.trim() === '1\n2\n3\n4\n5';
+        }
+    },
+    {
+        id: 'while_loop',
+        chapter: 'Chapter 3: Loops',
+        title: 'While Loops',
+        xp: 40,
+        body: `
+            <p>A <span class="concept">while loop</span> keeps going as long as a condition is true.</p>
+            <pre><code>let count = 0
+while (count < 3) {
+    console.log(count)
+    count++
+}
+// Prints: 0, 1, 2</code></pre>
+            <p>Be careful — if the condition never becomes false, the loop runs forever!</p>
+            <p><strong>Your task:</strong> Use a while loop to print <code>"Go!"</code> exactly 3 times.</p>
+        `,
+        starter: '// Print "Go!" 3 times using a while loop\n',
+        hint: 'let count = 0\nwhile (count < 3) {\n    console.log("Go!")\n    count++\n}',
+        check(output) {
+            return output.trim() === 'Go!\nGo!\nGo!';
+        }
+    },
+    {
+        id: 'arrays',
+        chapter: 'Chapter 4: Collections',
+        title: 'Arrays: Lists of Things',
+        xp: 45,
+        body: `
+            <p>An <span class="concept">array</span> holds multiple values in a list.</p>
+            <pre><code>let fruits = ["apple", "banana", "cherry"]
+console.log(fruits[0])  // "apple"
+console.log(fruits[1])  // "banana"
+console.log(fruits.length)  // 3</code></pre>
+            <p>Arrays start counting at <span class="highlight">0</span>, not 1. So the first item is <code>[0]</code>.</p>
+            <p><strong>Your task:</strong> Create an array called <code>colors</code> with <code>"red"</code>, <code>"green"</code>, <code>"blue"</code>. Print the second item.</p>
+        `,
+        starter: '// Create a colors array and print the second item\n',
+        hint: 'let colors = ["red", "green", "blue"]\nconsole.log(colors[1])',
+        check(output) {
+            return output.trim() === 'green';
+        }
+    },
+    {
+        id: 'loop_array',
+        chapter: 'Chapter 4: Collections',
+        title: 'Looping Through Arrays',
+        xp: 50,
+        body: `
+            <p>You can combine loops and arrays to do something with every item.</p>
+            <pre><code>let pets = ["cat", "dog", "fish"]
+for (let i = 0; i < pets.length; i++) {
+    console.log(pets[i])
+}</code></pre>
+            <p>Or use the simpler <code>for...of</code> loop:</p>
+            <pre><code>for (let pet of pets) {
+    console.log(pet)
+}</code></pre>
+            <p><strong>Your task:</strong> Create an array <code>numbers</code> with values <code>[10, 20, 30]</code>. Loop through and print each one.</p>
+        `,
+        starter: '// Create numbers array and print each value\n',
+        hint: 'let numbers = [10, 20, 30]\nfor (let num of numbers) {\n    console.log(num)\n}',
+        check(output) {
+            return output.trim() === '10\n20\n30';
+        }
+    },
+    {
+        id: 'functions',
+        chapter: 'Chapter 5: Functions',
+        title: 'Functions: Reusable Code',
+        xp: 50,
+        body: `
+            <p>A <span class="concept">function</span> is a reusable block of code you give a name.</p>
+            <pre><code>function sayHello() {
+    console.log("Hello there!")
+}
+
+sayHello()  // prints "Hello there!"
+sayHello()  // prints it again!</code></pre>
+            <p>You <span class="highlight">define</span> it once, then <span class="highlight">call</span> it whenever you need it.</p>
+            <p><strong>Your task:</strong> Create a function called <code>cheer</code> that prints <code>"Let's go!"</code>. Call it twice.</p>
+        `,
+        starter: '// Define the cheer function and call it twice\n',
+        hint: 'function cheer() {\n    console.log("Let\'s go!")\n}\ncheer()\ncheer()',
+        check(output) {
+            return output.trim() === "Let's go!\nLet's go!";
+        }
+    },
+    {
+        id: 'parameters',
+        chapter: 'Chapter 5: Functions',
+        title: 'Function Parameters',
+        xp: 55,
+        body: `
+            <p>Functions can accept <span class="concept">parameters</span> — inputs that change what they do.</p>
+            <pre><code>function greet(name) {
+    console.log("Hello, " + name + "!")
+}
+
+greet("Dylan")   // "Hello, Dylan!"
+greet("World")   // "Hello, World!"</code></pre>
+            <p><code>name</code> is a parameter — a placeholder that gets filled when you call the function.</p>
+            <p><strong>Your task:</strong> Create a function <code>double</code> that takes a number and prints it multiplied by 2. Call it with <code>7</code>.</p>
+        `,
+        starter: '// Create the double function\n',
+        hint: 'function double(num) {\n    console.log(num * 2)\n}\ndouble(7)',
+        check(output) {
+            return output.trim() === '14';
+        }
+    },
+    {
+        id: 'return',
+        chapter: 'Chapter 5: Functions',
+        title: 'Return Values',
+        xp: 55,
+        body: `
+            <p>Functions can <span class="concept">return</span> a value back to you, instead of just printing.</p>
+            <pre><code>function add(a, b) {
+    return a + b
+}
+
+let result = add(3, 5)
+console.log(result)  // 8</code></pre>
+            <p><code>return</code> sends the answer back. You can save it in a variable or use it directly.</p>
+            <p><strong>Your task:</strong> Create a function <code>multiply</code> that takes two numbers and <strong>returns</strong> their product. Print the result of <code>multiply(6, 7)</code>.</p>
+        `,
+        starter: '// Create multiply function that returns the product\n',
+        hint: 'function multiply(a, b) {\n    return a * b\n}\nconsole.log(multiply(6, 7))',
+        check(output) {
+            return output.trim() === '42';
+        }
+    },
+    {
+        id: 'objects',
+        chapter: 'Chapter 6: Objects',
+        title: 'Objects: Grouping Data',
+        xp: 60,
+        body: `
+            <p>An <span class="concept">object</span> groups related data together with named properties.</p>
+            <pre><code>let player = {
+    name: "Dylan",
+    score: 100,
+    level: 5
+}
+
+console.log(player.name)   // "Dylan"
+console.log(player.score)  // 100</code></pre>
+            <p>Use <code>.</code> (dot) to access properties. Think of objects like a form with labeled fields.</p>
+            <p><strong>Your task:</strong> Create an object <code>pet</code> with properties <code>name</code> set to <code>"Buddy"</code> and <code>type</code> set to <code>"dog"</code>. Print <code>pet.name</code>.</p>
+        `,
+        starter: '// Create a pet object and print its name\n',
+        hint: 'let pet = {\n    name: "Buddy",\n    type: "dog"\n}\nconsole.log(pet.name)',
+        check(output) {
+            return output.trim() === 'Buddy';
+        }
+    },
+    {
+        id: 'final_boss',
+        chapter: 'Chapter 7: Boss Level',
+        title: 'Final Boss: FizzBuzz',
+        xp: 100,
+        body: `
+            <p>Time for the classic coding challenge! This uses <strong>everything</strong> you've learned.</p>
+            <p><strong>The rules:</strong></p>
+            <p>Print numbers from 1 to 15, but:<br>
+            - If divisible by 3, print <code>"Fizz"</code> instead<br>
+            - If divisible by 5, print <code>"Buzz"</code> instead<br>
+            - If divisible by <strong>both</strong> 3 and 5, print <code>"FizzBuzz"</code></p>
+            <p><strong>Hint:</strong> Use <code>%</code> (modulo) to check divisibility. <code>6 % 3 === 0</code> means 6 is divisible by 3.</p>
+            <p>Expected output starts: <code>1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz</code></p>
+        `,
+        starter: '// FizzBuzz: Print 1 to 15 with the rules above\n',
+        hint: 'for (let i = 1; i <= 15; i++) {\n    if (i % 3 === 0 && i % 5 === 0) {\n        console.log("FizzBuzz")\n    } else if (i % 3 === 0) {\n        console.log("Fizz")\n    } else if (i % 5 === 0) {\n        console.log("Buzz")\n    } else {\n        console.log(i)\n    }\n}',
+        check(output) {
+            const expected = '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz';
+            return output.trim() === expected;
+        }
+    }
+];
+
+const challenges = [
+    {
+        id: 'ch_countdown',
+        title: 'Countdown!',
+        desc: 'Print numbers from 10 down to 1.',
+        difficulty: 'easy',
+        xp: 40,
+        starter: '// Count down from 10 to 1\n',
+        hint: 'for (let i = 10; i >= 1; i--) {\n    console.log(i)\n}',
+        check(output) {
+            return output.trim() === '10\n9\n8\n7\n6\n5\n4\n3\n2\n1';
+        }
+    },
+    {
+        id: 'ch_sum',
+        title: 'Sum it Up',
+        desc: 'Calculate the sum of numbers 1 to 10 and print it.',
+        difficulty: 'easy',
+        xp: 45,
+        starter: '// Find the sum of 1 + 2 + 3 + ... + 10\n',
+        hint: 'let sum = 0\nfor (let i = 1; i <= 10; i++) {\n    sum = sum + i\n}\nconsole.log(sum)',
+        check(output) {
+            return output.trim() === '55';
+        }
+    },
+    {
+        id: 'ch_even',
+        title: 'Even Numbers',
+        desc: 'Print only the even numbers from 1 to 20.',
+        difficulty: 'easy',
+        xp: 45,
+        starter: '// Print even numbers from 1 to 20\n',
+        hint: 'for (let i = 1; i <= 20; i++) {\n    if (i % 2 === 0) {\n        console.log(i)\n    }\n}',
+        check(output) {
+            return output.trim() === '2\n4\n6\n8\n10\n12\n14\n16\n18\n20';
+        }
+    },
+    {
+        id: 'ch_reverse',
+        title: 'Reverse a Word',
+        desc: 'Reverse the string "hello" and print it.',
+        difficulty: 'medium',
+        xp: 60,
+        starter: '// Reverse the word "hello"\nlet word = "hello"\n',
+        hint: 'console.log(word.split("").reverse().join(""))',
+        check(output) {
+            return output.trim() === 'olleh';
+        }
+    },
+    {
+        id: 'ch_max',
+        title: 'Find the Max',
+        desc: 'Find and print the largest number in [3, 7, 2, 9, 4].',
+        difficulty: 'medium',
+        xp: 65,
+        starter: '// Find the largest number\nlet nums = [3, 7, 2, 9, 4]\n',
+        hint: 'let max = nums[0]\nfor (let n of nums) {\n    if (n > max) {\n        max = n\n    }\n}\nconsole.log(max)',
+        check(output) {
+            return output.trim() === '9';
+        }
+    },
+    {
+        id: 'ch_pyramid',
+        title: 'Star Pyramid',
+        desc: 'Print a pyramid of stars with 5 rows:\n*\n**\n***\n****\n*****',
+        difficulty: 'medium',
+        xp: 70,
+        starter: '// Build a star pyramid with 5 rows\n',
+        hint: 'for (let i = 1; i <= 5; i++) {\n    console.log("*".repeat(i))\n}',
+        check(output) {
+            return output.trim() === '*\n**\n***\n****\n*****';
+        }
+    },
+    {
+        id: 'ch_factorial',
+        title: 'Factorial',
+        desc: 'Create a function that returns the factorial of 5 (5! = 120).',
+        difficulty: 'hard',
+        xp: 80,
+        starter: '// Calculate 5! (5 factorial = 5 * 4 * 3 * 2 * 1)\n',
+        hint: 'function factorial(n) {\n    let result = 1\n    for (let i = 1; i <= n; i++) {\n        result = result * i\n    }\n    return result\n}\nconsole.log(factorial(5))',
+        check(output) {
+            return output.trim() === '120';
+        }
+    },
+    {
+        id: 'ch_palindrome',
+        title: 'Palindrome Checker',
+        desc: 'Check if "racecar" is a palindrome. Print true or false.',
+        difficulty: 'hard',
+        xp: 85,
+        starter: '// Is "racecar" a palindrome?\nlet word = "racecar"\n',
+        hint: 'let reversed = word.split("").reverse().join("")\nconsole.log(word === reversed)',
+        check(output) {
+            return output.trim() === 'true';
+        }
+    }
+];
+
+const achievements = [
+    { id: 'first_code', icon: '🐣', name: 'Hello World', desc: 'Complete your first lesson', xp: 10 },
+    { id: 'three_lessons', icon: '📚', name: 'Bookworm', desc: 'Complete 3 lessons', xp: 25 },
+    { id: 'five_lessons', icon: '🔥', name: 'On Fire', desc: 'Complete 5 lessons', xp: 50 },
+    { id: 'all_lessons', icon: '🎓', name: 'Graduate', desc: 'Complete all lessons', xp: 100 },
+    { id: 'first_challenge', icon: '⚔️', name: 'Challenger', desc: 'Complete your first challenge', xp: 20 },
+    { id: 'three_challenges', icon: '🏆', name: 'Champion', desc: 'Complete 3 challenges', xp: 50 },
+    { id: 'all_challenges', icon: '👑', name: 'Legend', desc: 'Complete all challenges', xp: 150 },
+    { id: 'streak_3', icon: '⚡', name: 'Streak!', desc: 'Get 3 correct in a row', xp: 30 },
+    { id: 'streak_5', icon: '💎', name: 'Unstoppable', desc: 'Get 5 correct in a row', xp: 75 },
+    { id: 'no_hints', icon: '🧠', name: 'Big Brain', desc: 'Complete 3 lessons without hints', xp: 50 },
+    { id: 'speed_demon', icon: '🚀', name: 'Speed Demon', desc: 'Complete a lesson in under 30 seconds', xp: 40 },
+    { id: 'boss_slayer', icon: '🐉', name: 'Boss Slayer', desc: 'Complete the FizzBuzz boss level', xp: 100 },
+];
+
+// ==================== STATE ====================
+
+let state = loadState();
+
+function defaultState() {
+    return {
+        xp: 0,
+        level: 1,
+        completedLessons: [],
+        completedChallenges: [],
+        unlockedAchievements: [],
+        streak: 0,
+        noHintCount: 0,
+        currentTab: 'lessons',
+        currentLesson: 0,
+        currentChallenge: null,
+        hintsUsed: {}
+    };
+}
+
+function loadState() {
+    try {
+        const saved = localStorage.getItem('codequest_state');
+        if (saved) return { ...defaultState(), ...JSON.parse(saved) };
+    } catch(e) {}
+    return defaultState();
+}
+
+function saveState() {
+    localStorage.setItem('codequest_state', JSON.stringify(state));
+}
+
+// ==================== CORE ====================
+
+let lessonStartTime = Date.now();
+
+function addXP(amount) {
+    state.xp += amount;
+    const needed = state.level * 100;
+    while (state.xp >= needed) {
+        state.xp -= needed;
+        state.level++;
+    }
+    updateTopBar();
+    saveState();
+}
+
+function updateTopBar() {
+    const needed = state.level * 100;
+    document.getElementById('levelNum').textContent = state.level;
+    document.getElementById('xpNum').textContent = state.xp;
+    document.getElementById('xpMax').textContent = needed;
+    document.getElementById('xpBar').style.width = (state.xp / needed * 100) + '%';
+    document.getElementById('completedCount').textContent = state.completedLessons.length + state.completedChallenges.length;
+    document.getElementById('achievementCount').textContent = state.unlockedAchievements.length + '/' + achievements.length;
+
+    const streakBadge = document.getElementById('streakBadge');
+    if (state.streak >= 2) {
+        streakBadge.style.display = 'inline';
+        streakBadge.textContent = state.streak + ' streak 🔥';
+    } else {
+        streakBadge.style.display = 'none';
+    }
+}
+
+function switchTab(tab) {
+    state.currentTab = tab;
+    document.querySelectorAll('.nav-tab').forEach((t, i) => {
+        t.classList.toggle('active', ['lessons', 'challenges', 'achievements'][i] === tab);
+    });
+    renderSidebar();
+    if (tab === 'lessons') loadLesson(state.currentLesson);
+    else if (tab === 'challenges' && state.currentChallenge !== null) loadChallenge(state.currentChallenge);
+    else if (tab === 'achievements') renderAchievementsPage();
+    saveState();
+}
+
+function renderSidebar() {
+    const container = document.getElementById('sidebarContent');
+    if (state.currentTab === 'lessons') {
+        container.innerHTML = lessons.map((l, i) => {
+            const completed = state.completedLessons.includes(l.id);
+            const locked = i > 0 && !state.completedLessons.includes(lessons[i-1].id) && !completed;
+            const active = i === state.currentLesson;
+            return `
+                <div class="sidebar-section" style="padding: 4px 16px;">
+                    <div class="lesson-item ${completed ? 'completed' : ''} ${locked ? 'locked' : ''} ${active ? 'active' : ''}"
+                         onclick="${locked ? '' : `loadLesson(${i})`}">
+                        <div class="lesson-icon">${completed ? '✓' : locked ? '🔒' : i + 1}</div>
+                        <div class="lesson-info">
+                            <div class="lesson-name">${l.title}</div>
+                            <div class="lesson-xp">+${l.xp} XP</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    } else if (state.currentTab === 'challenges') {
+        container.innerHTML = challenges.map((c, i) => {
+            const completed = state.completedChallenges.includes(c.id);
+            return `
+                <div class="sidebar-section" style="padding: 4px 16px;">
+                    <div class="challenge-item ${completed ? 'completed' : ''}" onclick="loadChallenge(${i})">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                            <div class="challenge-title">${completed ? '✓ ' : ''}${c.title}</div>
+                            <span class="difficulty ${c.difficulty}">${c.difficulty}</span>
+                        </div>
+                        <div class="challenge-desc">${c.desc.split('\n')[0]}</div>
+                        <div class="challenge-reward">+${c.xp} XP</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    } else {
+        container.innerHTML = achievements.map(a => {
+            const unlocked = state.unlockedAchievements.includes(a.id);
+            return `
+                <div class="sidebar-section" style="padding: 4px 16px;">
+                    <div class="achievement-item ${unlocked ? 'unlocked' : 'locked'}">
+                        <div class="achievement-icon">${a.icon}</div>
+                        <div>
+                            <div class="achievement-name">${unlocked ? a.name : '???'}</div>
+                            <div class="achievement-desc">${a.desc}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+}
+
+function loadLesson(index) {
+    state.currentLesson = index;
+    state.currentChallenge = null;
+    const lesson = lessons[index];
+    document.getElementById('lessonPanel').innerHTML = `
+        <div class="lesson-header">
+            <div class="lesson-chapter">${lesson.chapter}</div>
+            <div class="lesson-title">${lesson.title}</div>
+        </div>
+        <div class="lesson-body">${lesson.body}</div>
+    `;
+    document.getElementById('codeInput').value = lesson.starter;
+    document.getElementById('outputContent').textContent = '';
+    document.getElementById('resultBanner').className = 'result-banner';
+    lessonStartTime = Date.now();
+    renderSidebar();
+    saveState();
+}
+
+function loadChallenge(index) {
+    state.currentChallenge = index;
+    const ch = challenges[index];
+    document.getElementById('lessonPanel').innerHTML = `
+        <div class="lesson-header">
+            <div class="lesson-chapter">Challenge</div>
+            <div class="lesson-title">${ch.title}</div>
+        </div>
+        <div class="lesson-body">
+            <p>${ch.desc.replace(/\n/g, '<br>')}</p>
+            <span class="difficulty ${ch.difficulty}">${ch.difficulty}</span>
+            &nbsp; <span class="challenge-reward">+${ch.xp} XP</span>
+        </div>
+    `;
+    document.getElementById('codeInput').value = ch.starter;
+    document.getElementById('outputContent').textContent = '';
+    document.getElementById('resultBanner').className = 'result-banner';
+    lessonStartTime = Date.now();
+    renderSidebar();
+    saveState();
+}
+
+function renderAchievementsPage() {
+    document.getElementById('lessonPanel').innerHTML = `
+        <div class="lesson-header">
+            <div class="lesson-chapter">Your Collection</div>
+            <div class="lesson-title">Achievements</div>
+        </div>
+        <div class="lesson-body">
+            <p>Complete lessons and challenges to unlock achievements and earn bonus XP!</p>
+            <p><strong>${state.unlockedAchievements.length}</strong> of <strong>${achievements.length}</strong> unlocked</p>
+        </div>
+    `;
+}
+
+// ==================== CODE EXECUTION ====================
+
+function runCode() {
+    const code = document.getElementById('codeInput').value;
+    const output = executeCode(code);
+    document.getElementById('outputContent').innerHTML = output.error
+        ? `<span class="error">${output.error}</span>`
+        : output.text;
+}
+
+function submitCode() {
+    const code = document.getElementById('codeInput').value;
+    const output = executeCode(code);
+
+    const outputEl = document.getElementById('outputContent');
+    outputEl.innerHTML = output.error
+        ? `<span class="error">${output.error}</span>`
+        : output.text;
+
+    let item, isChallenge = false;
+    if (state.currentTab === 'challenges' && state.currentChallenge !== null) {
+        item = challenges[state.currentChallenge];
+        isChallenge = true;
+    } else {
+        item = lessons[state.currentLesson];
+    }
+
+    const passed = !output.error && item.check(output.text);
+    showResult(passed, item, isChallenge);
+}
+
+function executeCode(code) {
+    let logs = [];
+    const fakeConsole = {
+        log: (...args) => logs.push(args.map(a =>
+            typeof a === 'object' ? JSON.stringify(a) : String(a)
+        ).join(' '))
+    };
+
+    // Safety: limit execution and prevent dangerous operations
+    const safeCode = `
+        "use strict";
+        const console = __console__;
+        const alert = undefined;
+        const prompt = undefined;
+        const confirm = undefined;
+        const fetch = undefined;
+        const XMLHttpRequest = undefined;
+        ${code}
+    `;
+
+    try {
+        const fn = new Function('__console__', safeCode);
+        // Timeout protection
+        const start = Date.now();
+        fn(fakeConsole);
+        if (Date.now() - start > 3000) {
+            return { text: '', error: 'Code took too long to run!' };
+        }
+        return { text: logs.join('\n'), error: null };
+    } catch (e) {
+        return { text: '', error: e.toString() };
+    }
+}
+
+function showResult(passed, item, isChallenge) {
+    const banner = document.getElementById('resultBanner');
+    banner.className = `result-banner show ${passed ? 'pass' : 'fail'}`;
+    document.getElementById('resultIcon').textContent = passed ? '🎉' : '❌';
+    document.getElementById('resultTitle').textContent = passed ? 'Correct!' : 'Not quite...';
+
+    if (passed) {
+        const alreadyDone = isChallenge
+            ? state.completedChallenges.includes(item.id)
+            : state.completedLessons.includes(item.id);
+
+        const xpGained = alreadyDone ? 0 : item.xp;
+
+        document.getElementById('resultDetail').textContent = alreadyDone
+            ? 'Already completed — no extra XP'
+            : `+${xpGained} XP earned!`;
+
+        if (!alreadyDone) {
+            if (isChallenge) state.completedChallenges.push(item.id);
+            else state.completedLessons.push(item.id);
+            addXP(xpGained);
+            state.streak++;
+
+            // Check if hint was used
+            if (!state.hintsUsed[item.id]) state.noHintCount++;
+
+            checkAchievements();
+        }
+
+        document.getElementById('nextBtn').style.display = isChallenge ? 'none' : 'inline-flex';
+    } else {
+        state.streak = 0;
+        document.getElementById('resultDetail').textContent = 'Check your code and try again. Use Hint if you\'re stuck!';
+        document.getElementById('nextBtn').style.display = 'none';
+    }
+
+    updateTopBar();
+    renderSidebar();
+    saveState();
+}
+
+function nextLesson() {
+    if (state.currentLesson < lessons.length - 1) {
+        loadLesson(state.currentLesson + 1);
+    }
+}
+
+function resetCode() {
+    if (state.currentTab === 'challenges' && state.currentChallenge !== null) {
+        document.getElementById('codeInput').value = challenges[state.currentChallenge].starter;
+    } else {
+        document.getElementById('codeInput').value = lessons[state.currentLesson].starter;
+    }
+    document.getElementById('outputContent').textContent = '';
+    document.getElementById('resultBanner').className = 'result-banner';
+}
+
+function showHint() {
+    let item;
+    if (state.currentTab === 'challenges' && state.currentChallenge !== null) {
+        item = challenges[state.currentChallenge];
+    } else {
+        item = lessons[state.currentLesson];
+    }
+    state.hintsUsed[item.id] = true;
+    saveState();
+
+    const outputEl = document.getElementById('outputContent');
+    outputEl.innerHTML = `<span class="success">💡 Hint:\n\n${item.hint.replace(/</g, '&lt;')}</span>`;
+}
+
+// ==================== ACHIEVEMENTS ====================
+
+function checkAchievements() {
+    const checks = {
+        first_code: () => state.completedLessons.length >= 1,
+        three_lessons: () => state.completedLessons.length >= 3,
+        five_lessons: () => state.completedLessons.length >= 5,
+        all_lessons: () => state.completedLessons.length >= lessons.length,
+        first_challenge: () => state.completedChallenges.length >= 1,
+        three_challenges: () => state.completedChallenges.length >= 3,
+        all_challenges: () => state.completedChallenges.length >= challenges.length,
+        streak_3: () => state.streak >= 3,
+        streak_5: () => state.streak >= 5,
+        no_hints: () => state.noHintCount >= 3,
+        speed_demon: () => (Date.now() - lessonStartTime) < 30000 && state.completedLessons.length > 0,
+        boss_slayer: () => state.completedLessons.includes('final_boss'),
+    };
+
+    for (const a of achievements) {
+        if (!state.unlockedAchievements.includes(a.id) && checks[a.id] && checks[a.id]()) {
+            unlockAchievement(a);
+        }
+    }
+}
+
+function unlockAchievement(a) {
+    state.unlockedAchievements.push(a.id);
+    addXP(a.xp);
+    saveState();
+
+    document.getElementById('popupIcon').textContent = a.icon;
+    document.getElementById('popupName').textContent = a.name;
+    document.getElementById('popupDesc').textContent = a.desc;
+    document.getElementById('popupXp').textContent = `+${a.xp} Bonus XP!`;
+    document.getElementById('overlay').className = 'overlay show';
+    document.getElementById('achievementPopup').className = 'achievement-popup show';
+}
+
+function closeAchievement() {
+    document.getElementById('overlay').className = 'overlay';
+    document.getElementById('achievementPopup').className = 'achievement-popup';
+    updateTopBar();
+    renderSidebar();
+}
+
+// ==================== TAB KEY IN EDITOR ====================
+
+document.getElementById('codeInput').addEventListener('keydown', function(e) {
+    if (e.key === 'Tab') {
+        e.preventDefault();
+        const start = this.selectionStart;
+        const end = this.selectionEnd;
+        this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+        this.selectionStart = this.selectionEnd = start + 4;
+    }
+});
+
+// ==================== INIT ====================
+
+updateTopBar();
+switchTab(state.currentTab);
+if (state.currentTab === 'lessons') loadLesson(state.currentLesson);
+</script>
+</body>
+</html>

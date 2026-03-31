@@ -1711,7 +1711,7 @@ function executeJS(code) {
     let safeCode = code.replace(/(while\s*\([^)]*\)\s*\{)/g, '$1 if(++__lc__>' + maxLoops + ')throw new Error("Infinite loop detected! Make sure your loop has a way to stop.");');
     safeCode = safeCode.replace(/(for\s*\([^)]*\)\s*\{)/g, '$1 if(++__lc__>' + maxLoops + ')throw new Error("Infinite loop detected! Make sure your loop has a way to stop.");');
     try {
-        const fn = new Function('__console__', '__lc__', `"use strict";const console=__console__;const alert=undefined,prompt=undefined,confirm=undefined,fetch=undefined,XMLHttpRequest=undefined;let __lc=0;${safeCode}`);
+        const fn = new Function('__console__', '__lc__', `"use strict";const console=__console__;const print=__console__.log;const alert=undefined,prompt=undefined,confirm=undefined,fetch=undefined,XMLHttpRequest=undefined;let __lc=0;${safeCode}`);
         fn(fakeConsole, 0);
         return { text: logs.join('\n'), error: null };
     } catch(e) {

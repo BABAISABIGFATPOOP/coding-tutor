@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeQuest - Learn to Code</title>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- Pyodide for Python -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.24.1/full/pyodide.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -31,7 +37,124 @@
             overflow: hidden;
         }
 
-        /* Top Bar */
+        /* ===== AUTH SCREEN ===== */
+        .auth-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: var(--bg-dark);
+        }
+
+        .auth-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px;
+            width: 400px;
+            text-align: center;
+        }
+
+        .auth-logo {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .auth-subtitle {
+            color: var(--text-dim);
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-editor);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+            margin-bottom: 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .auth-input:focus { border-color: var(--accent); }
+
+        .auth-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .auth-btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        .auth-btn-primary:hover { box-shadow: 0 0 20px var(--accent-glow); }
+
+        .auth-btn-google {
+            background: white;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .auth-btn-google:hover { background: #f0f0f0; }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0;
+            color: var(--text-dim);
+            font-size: 12px;
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .auth-toggle {
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 16px;
+        }
+        .auth-toggle:hover { text-decoration: underline; }
+
+        .auth-error {
+            color: var(--red);
+            font-size: 13px;
+            margin-bottom: 12px;
+            display: none;
+        }
+
+        .auth-guest {
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 12px;
+        }
+        .auth-guest:hover { color: var(--text); }
+
+        /* ===== TOP BAR ===== */
+        .app-screen { display: none; height: 100vh; flex-direction: column; }
+        .app-screen.show { display: flex; }
+
         .topbar {
             display: flex;
             align-items: center;
@@ -100,13 +223,84 @@
             font-weight: 700;
         }
 
-        /* Main Layout */
-        .main-layout {
+        .user-info {
             display: flex;
-            height: calc(100vh - 60px);
+            align-items: center;
+            gap: 10px;
         }
 
-        /* Sidebar */
+        .user-email {
+            font-size: 12px;
+            color: var(--text-dim);
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .btn-signout {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-signout:hover { border-color: var(--red); color: var(--red); }
+
+        /* ===== LANGUAGE TOGGLE ===== */
+        .lang-toggle {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-dark);
+            padding: 3px;
+            border-radius: 8px;
+        }
+
+        .lang-btn {
+            padding: 5px 14px;
+            border-radius: 6px;
+            border: none;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: var(--text-dim);
+        }
+
+        .lang-btn.active-js {
+            background: #f7df1e;
+            color: #000;
+        }
+
+        .lang-btn.active-py {
+            background: #3776ab;
+            color: #fff;
+        }
+
+        .lang-btn:hover:not(.active-js):not(.active-py) {
+            color: var(--text);
+        }
+
+        .pyodide-status {
+            font-size: 11px;
+            color: var(--text-dim);
+            padding: 2px 8px;
+        }
+
+        .pyodide-status.loading { color: var(--yellow); }
+        .pyodide-status.ready { color: var(--green); }
+
+        /* ===== MAIN LAYOUT ===== */
+        .main-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
         .sidebar {
             width: 280px;
             background: var(--bg-sidebar);
@@ -116,8 +310,7 @@
         }
 
         .sidebar-section {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
+            padding: 4px 16px;
         }
 
         .sidebar-title {
@@ -131,9 +324,7 @@
         .nav-tabs {
             display: flex;
             gap: 4px;
-            margin-bottom: 12px;
-            padding: 0 16px;
-            padding-top: 12px;
+            padding: 12px 16px 0;
         }
 
         .nav-tab {
@@ -193,7 +384,6 @@
         .lesson-name { font-size: 13px; font-weight: 600; }
         .lesson-xp { font-size: 11px; color: var(--text-dim); }
 
-        /* Challenge items */
         .challenge-item {
             padding: 12px;
             border-radius: 8px;
@@ -231,7 +421,6 @@
         .difficulty.medium { background: rgba(253, 203, 110, 0.15); color: var(--yellow); }
         .difficulty.hard { background: rgba(225, 112, 85, 0.15); color: var(--red); }
 
-        /* Achievement items in sidebar */
         .achievement-item {
             display: flex;
             align-items: center;
@@ -257,11 +446,10 @@
         }
 
         .achievement-item.locked .achievement-icon { filter: grayscale(1); }
-
         .achievement-name { font-size: 13px; font-weight: 600; }
         .achievement-desc { font-size: 11px; color: var(--text-dim); }
 
-        /* Content Area */
+        /* ===== CONTENT AREA ===== */
         .content-area {
             flex: 1;
             display: flex;
@@ -269,16 +457,13 @@
             overflow: hidden;
         }
 
-        /* Lesson Content */
         .lesson-panel {
             padding: 32px;
             overflow-y: auto;
             flex: 1;
         }
 
-        .lesson-header {
-            margin-bottom: 24px;
-        }
+        .lesson-header { margin-bottom: 24px; }
 
         .lesson-chapter {
             font-size: 12px;
@@ -288,10 +473,7 @@
             margin-bottom: 4px;
         }
 
-        .lesson-title {
-            font-size: 28px;
-            font-weight: 800;
-        }
+        .lesson-title { font-size: 28px; font-weight: 800; }
 
         .lesson-body {
             font-size: 15px;
@@ -328,7 +510,7 @@
         .lesson-body .highlight { color: var(--yellow); font-weight: 600; }
         .lesson-body .concept { color: var(--accent); font-weight: 600; }
 
-        /* Editor Section */
+        /* ===== EDITOR ===== */
         .editor-section {
             border-top: 1px solid var(--border);
             display: flex;
@@ -344,6 +526,12 @@
             padding: 8px 16px;
             background: var(--bg-card);
             border-bottom: 1px solid var(--border);
+        }
+
+        .editor-toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .editor-label {
@@ -372,16 +560,10 @@
             gap: 6px;
         }
 
-        .btn-run {
-            background: var(--green);
-            color: #000;
-        }
+        .btn-run { background: var(--green); color: #000; }
         .btn-run:hover { box-shadow: 0 0 20px var(--green-glow); }
 
-        .btn-submit {
-            background: var(--accent);
-            color: white;
-        }
+        .btn-submit { background: var(--accent); color: white; }
         .btn-submit:hover { box-shadow: 0 0 20px var(--accent-glow); }
 
         .btn-reset {
@@ -403,10 +585,7 @@
             overflow: hidden;
         }
 
-        .code-editor {
-            flex: 1;
-            position: relative;
-        }
+        .code-editor { flex: 1; position: relative; }
 
         .code-editor textarea {
             width: 100%;
@@ -472,12 +651,7 @@
         .result-title { font-weight: 700; font-size: 16px; }
         .result-detail { font-size: 13px; color: var(--text-dim); }
 
-        .btn-next {
-            background: var(--green);
-            color: #000;
-            padding: 10px 24px;
-            font-weight: 700;
-        }
+        .btn-next { background: var(--green); color: #000; padding: 10px 24px; font-weight: 700; }
 
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
@@ -529,13 +703,11 @@
             to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
 
-        /* Responsive */
         @media (max-width: 900px) {
             .sidebar { width: 220px; }
             .output-panel { width: 35%; }
@@ -544,66 +716,101 @@
 </head>
 <body>
 
-<!-- Top Bar -->
-<div class="topbar">
-    <div class="topbar-left">
-        <div class="logo">CodeQuest</div>
-        <span id="levelBadge" class="stat">Level <span class="stat-value" id="levelNum">1</span></span>
-        <div class="xp-bar-container">
-            <div class="xp-bar-fill" id="xpBar" style="width: 0%"></div>
+<!-- ===== AUTH SCREEN ===== -->
+<div class="auth-screen" id="authScreen">
+    <div class="auth-box">
+        <div class="auth-logo">CodeQuest</div>
+        <div class="auth-subtitle">Learn to code with interactive lessons</div>
+
+        <div class="auth-error" id="authError"></div>
+
+        <div id="authForm">
+            <input class="auth-input" type="email" id="authEmail" placeholder="Email address">
+            <input class="auth-input" type="password" id="authPassword" placeholder="Password">
+            <button class="auth-btn auth-btn-primary" id="authSubmitBtn" onclick="authSubmit()">Sign In</button>
+
+            <div class="auth-divider">or</div>
+
+            <button class="auth-btn auth-btn-google" onclick="googleSignIn()">
+                <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                Continue with Google
+            </button>
+
+            <div class="auth-toggle" id="authToggle" onclick="toggleAuthMode()">Don't have an account? Sign up</div>
+            <div class="auth-guest" onclick="guestSignIn()">Continue as guest (progress saved locally only)</div>
         </div>
-        <span class="stat" id="xpLabel"><span class="stat-value" id="xpNum">0</span> / <span id="xpMax">100</span> XP</span>
-    </div>
-    <div class="topbar-stats">
-        <span class="stat">Completed: <span class="stat-value" id="completedCount">0</span></span>
-        <span class="stat">Achievements: <span class="stat-value" id="achievementCount">0</span></span>
-        <span id="streakBadge" class="streak-badge" style="display:none">0 streak</span>
     </div>
 </div>
 
-<!-- Main Layout -->
-<div class="main-layout">
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="nav-tabs">
-            <div class="nav-tab active" onclick="switchTab('lessons')">Lessons</div>
-            <div class="nav-tab" onclick="switchTab('challenges')">Challenges</div>
-            <div class="nav-tab" onclick="switchTab('achievements')">Trophies</div>
+<!-- ===== APP SCREEN ===== -->
+<div class="app-screen" id="appScreen">
+    <div class="topbar">
+        <div class="topbar-left">
+            <div class="logo">CodeQuest</div>
+            <div class="lang-toggle">
+                <button class="lang-btn active-js" id="langJs" onclick="switchLang('js')">JavaScript</button>
+                <button class="lang-btn" id="langPy" onclick="switchLang('python')">Python</button>
+            </div>
+            <span class="pyodide-status" id="pyodideStatus"></span>
+            <span class="stat">Lv <span class="stat-value" id="levelNum">1</span></span>
+            <div class="xp-bar-container">
+                <div class="xp-bar-fill" id="xpBar" style="width: 0%"></div>
+            </div>
+            <span class="stat"><span class="stat-value" id="xpNum">0</span> / <span id="xpMax">100</span> XP</span>
         </div>
-        <div id="sidebarContent"></div>
+        <div class="topbar-stats">
+            <span class="stat">Done: <span class="stat-value" id="completedCount">0</span></span>
+            <span class="stat">Trophies: <span class="stat-value" id="achievementCount">0</span></span>
+            <span id="streakBadge" class="streak-badge" style="display:none"></span>
+            <div class="user-info">
+                <span class="user-email" id="userEmail"></span>
+                <button class="btn-signout" onclick="signOut()">Sign Out</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Content -->
-    <div class="content-area">
-        <div class="lesson-panel" id="lessonPanel"></div>
+    <div class="main-layout">
+        <div class="sidebar">
+            <div class="nav-tabs">
+                <div class="nav-tab active" onclick="switchTab('lessons')">Lessons</div>
+                <div class="nav-tab" onclick="switchTab('challenges')">Challenges</div>
+                <div class="nav-tab" onclick="switchTab('achievements')">Trophies</div>
+            </div>
+            <div id="sidebarContent"></div>
+        </div>
 
-        <div class="editor-section">
-            <div class="editor-toolbar">
-                <span class="editor-label">Code Editor</span>
-                <div class="editor-actions">
-                    <button class="btn btn-hint" onclick="showHint()">Hint</button>
-                    <button class="btn btn-reset" onclick="resetCode()">Reset</button>
-                    <button class="btn btn-run" onclick="runCode()">Run</button>
-                    <button class="btn btn-submit" onclick="submitCode()">Submit</button>
+        <div class="content-area">
+            <div class="lesson-panel" id="lessonPanel"></div>
+
+            <div class="editor-section">
+                <div class="editor-toolbar">
+                    <div class="editor-toolbar-left">
+                        <span class="editor-label" id="editorLangLabel">JavaScript</span>
+                    </div>
+                    <div class="editor-actions">
+                        <button class="btn btn-hint" onclick="showHint()">Hint</button>
+                        <button class="btn btn-reset" onclick="resetCode()">Reset</button>
+                        <button class="btn btn-run" onclick="runCode()">Run</button>
+                        <button class="btn btn-submit" onclick="submitCode()">Submit</button>
+                    </div>
                 </div>
-            </div>
-            <div class="editor-main">
-                <div class="code-editor">
-                    <textarea id="codeInput" spellcheck="false" placeholder="// Write your code here..."></textarea>
+                <div class="editor-main">
+                    <div class="code-editor">
+                        <textarea id="codeInput" spellcheck="false" placeholder="// Write your code here..."></textarea>
+                    </div>
+                    <div class="output-panel">
+                        <div class="output-header">Output</div>
+                        <div class="output-content" id="outputContent"></div>
+                    </div>
                 </div>
-                <div class="output-panel">
-                    <div class="output-header">Output</div>
-                    <div class="output-content" id="outputContent"></div>
+                <div class="result-banner" id="resultBanner">
+                    <span class="result-icon" id="resultIcon"></span>
+                    <div class="result-text">
+                        <div class="result-title" id="resultTitle"></div>
+                        <div class="result-detail" id="resultDetail"></div>
+                    </div>
+                    <button class="btn btn-next" id="nextBtn" onclick="nextLesson()">Next Lesson</button>
                 </div>
-            </div>
-            <div class="result-banner" id="resultBanner">
-                <span class="result-icon" id="resultIcon"></span>
-                <div class="result-text">
-                    <div class="result-title" id="resultTitle"></div>
-                    <div class="result-detail" id="resultDetail"></div>
-                </div>
-                <button class="btn btn-next" id="nextBtn" onclick="nextLesson()">Next Lesson</button>
             </div>
         </div>
     </div>
@@ -622,96 +829,242 @@
 </div>
 
 <script>
-// ==================== DATA ====================
+// ==================== FIREBASE ====================
 
-const lessons = [
+const firebaseConfig = {
+    apiKey: "AIzaSyDkamTU1XsidPfYq9IGKKIhFh7ymM1BgjY",
+    authDomain: "clicker-sign-in.firebaseapp.com",
+    projectId: "clicker-sign-in",
+    storageBucket: "clicker-sign-in.firebasestorage.app",
+    messagingSenderId: "381074645572",
+    appId: "1:381074645572:web:6ad68c61fa49c98c89d211"
+};
+
+let firebaseReady = false;
+let db = null;
+let auth = null;
+let googleProvider = null;
+let currentUser = null;
+let isGuest = false;
+
+try {
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+    googleProvider = new firebase.auth.GoogleAuthProvider();
+    firebaseReady = true;
+} catch(e) {
+    console.warn('Firebase init failed:', e);
+}
+
+let authMode = 'signin'; // 'signin' or 'signup'
+
+function toggleAuthMode() {
+    authMode = authMode === 'signin' ? 'signup' : 'signin';
+    document.getElementById('authSubmitBtn').textContent = authMode === 'signin' ? 'Sign In' : 'Sign Up';
+    document.getElementById('authToggle').textContent = authMode === 'signin'
+        ? "Don't have an account? Sign up"
+        : "Already have an account? Sign in";
+    document.getElementById('authError').style.display = 'none';
+}
+
+function showAuthError(msg) {
+    const el = document.getElementById('authError');
+    el.textContent = msg;
+    el.style.display = 'block';
+}
+
+async function authSubmit() {
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    if (!email || !password) return showAuthError('Please enter email and password.');
+    if (password.length < 6) return showAuthError('Password must be at least 6 characters.');
+
+    try {
+        if (authMode === 'signup') {
+            await auth.createUserWithEmailAndPassword(email, password);
+        } else {
+            await auth.signInWithEmailAndPassword(email, password);
+        }
+    } catch(e) {
+        showAuthError(e.message.replace('Firebase: ', ''));
+    }
+}
+
+async function googleSignIn() {
+    try {
+        await auth.signInWithPopup(googleProvider);
+    } catch(e) {
+        showAuthError(e.message.replace('Firebase: ', ''));
+    }
+}
+
+function guestSignIn() {
+    isGuest = true;
+    currentUser = null;
+    document.getElementById('userEmail').textContent = 'Guest';
+    enterApp();
+}
+
+function signOut() {
+    if (auth) auth.signOut();
+    isGuest = false;
+    currentUser = null;
+    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('appScreen').classList.remove('show');
+}
+
+if (firebaseReady) {
+    auth.onAuthStateChanged(user => {
+        if (user && !isGuest) {
+            currentUser = user;
+            document.getElementById('userEmail').textContent = user.email || user.displayName || 'User';
+            loadCloudState().then(() => enterApp());
+        }
+    });
+}
+
+function enterApp() {
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('appScreen').classList.add('show');
+    updateTopBar();
+    switchTab(state.currentTab);
+    if (state.currentTab === 'lessons') loadLesson(state.currentLesson);
+}
+
+// ==================== CLOUD SAVE ====================
+
+async function saveToCloud() {
+    if (!firebaseReady || !currentUser || isGuest) return;
+    try {
+        await db.collection('codequest').doc(currentUser.uid).set(state);
+    } catch(e) {
+        console.warn('Cloud save failed:', e);
+    }
+}
+
+async function loadCloudState() {
+    if (!firebaseReady || !currentUser || isGuest) return;
+    try {
+        const doc = await db.collection('codequest').doc(currentUser.uid).get();
+        if (doc.exists) {
+            const cloud = doc.data();
+            state = { ...defaultState(), ...cloud };
+        }
+    } catch(e) {
+        console.warn('Cloud load failed:', e);
+    }
+}
+
+// ==================== PYODIDE ====================
+
+let pyodide = null;
+let pyodideLoading = false;
+
+async function loadPyodide_() {
+    if (pyodide || pyodideLoading) return;
+    pyodideLoading = true;
+    const statusEl = document.getElementById('pyodideStatus');
+    statusEl.textContent = 'Loading Python...';
+    statusEl.className = 'pyodide-status loading';
+    try {
+        pyodide = await loadPyodide();
+        statusEl.textContent = 'Python ready';
+        statusEl.className = 'pyodide-status ready';
+        setTimeout(() => { statusEl.textContent = ''; }, 3000);
+    } catch(e) {
+        statusEl.textContent = 'Python failed to load';
+        statusEl.className = 'pyodide-status';
+        console.error('Pyodide load failed:', e);
+        pyodideLoading = false;
+    }
+}
+
+// ==================== LANGUAGE ====================
+
+let currentLang = 'js'; // 'js' or 'python'
+
+function switchLang(lang) {
+    currentLang = lang;
+    document.getElementById('langJs').className = lang === 'js' ? 'lang-btn active-js' : 'lang-btn';
+    document.getElementById('langPy').className = lang === 'python' ? 'lang-btn active-py' : 'lang-btn';
+    document.getElementById('editorLangLabel').textContent = lang === 'js' ? 'JavaScript' : 'Python';
+    document.getElementById('codeInput').placeholder = lang === 'js'
+        ? '// Write your code here...'
+        : '# Write your code here...';
+
+    if (lang === 'python') loadPyodide_();
+
+    // Reload current lesson/challenge to show correct language
+    if (state.currentTab === 'challenges' && state.currentChallenge !== null) {
+        loadChallenge(state.currentChallenge);
+    } else {
+        loadLesson(state.currentLesson);
+    }
+}
+
+// ==================== LESSON DATA ====================
+
+function getLessons() {
+    if (currentLang === 'python') return pythonLessons;
+    return jsLessons;
+}
+
+function getChallenges() {
+    if (currentLang === 'python') return pythonChallenges;
+    return jsChallenges;
+}
+
+const jsLessons = [
     {
-        id: 'hello',
-        chapter: 'Chapter 1: First Steps',
-        title: 'Hello, World!',
-        xp: 25,
-        body: `
-            <p>Every coder's journey starts with <span class="concept">printing</span> something to the screen.</p>
+        id: 'js_hello', chapter: 'Chapter 1: First Steps', title: 'Hello, World!', xp: 25,
+        body: `<p>Every coder's journey starts with <span class="concept">printing</span> something to the screen.</p>
             <p>In JavaScript, we use <code>console.log()</code> to print. Whatever you put inside the parentheses shows up in the output.</p>
             <pre><code>console.log("Hello, World!")</code></pre>
             <p>Text must be wrapped in <span class="highlight">quotes</span> — either <code>"double"</code> or <code>'single'</code>.</p>
-            <p><strong>Your task:</strong> Print <code>Hello, World!</code> to the output.</p>
-        `,
+            <p><strong>Your task:</strong> Print <code>Hello, World!</code> to the output.</p>`,
         starter: '// Print "Hello, World!" below\n',
-        hint: 'Use console.log("Hello, World!")',
-        check(output) {
-            return output.trim().includes('Hello, World!');
-        }
+        hint: 'console.log("Hello, World!")',
+        check(output) { return output.trim().includes('Hello, World!'); }
     },
     {
-        id: 'variables',
-        chapter: 'Chapter 1: First Steps',
-        title: 'Variables: Storing Data',
-        xp: 30,
-        body: `
-            <p>A <span class="concept">variable</span> is like a labeled box that stores a value. You create one with <code>let</code>.</p>
+        id: 'js_variables', chapter: 'Chapter 1: First Steps', title: 'Variables: Storing Data', xp: 30,
+        body: `<p>A <span class="concept">variable</span> is like a labeled box that stores a value. You create one with <code>let</code>.</p>
             <pre><code>let name = "Dylan"
 let age = 15
 let score = 99.5</code></pre>
-            <p><code>"Dylan"</code> is a <span class="highlight">string</span> (text). <code>15</code> is a <span class="highlight">number</span>.</p>
-            <p><strong>Your task:</strong> Create a variable called <code>greeting</code> that holds <code>"Hello!"</code>, then print it.</p>
-        `,
+            <p><strong>Your task:</strong> Create a variable called <code>greeting</code> that holds <code>"Hello!"</code>, then print it.</p>`,
         starter: '// Create a variable called greeting\n// Then print it with console.log()\n',
         hint: 'let greeting = "Hello!"\nconsole.log(greeting)',
-        check(output) {
-            return output.trim() === 'Hello!';
-        }
+        check(output) { return output.trim() === 'Hello!'; }
     },
     {
-        id: 'math',
-        chapter: 'Chapter 1: First Steps',
-        title: 'Math with Numbers',
-        xp: 30,
-        body: `
-            <p>JavaScript can do math just like a calculator!</p>
+        id: 'js_math', chapter: 'Chapter 1: First Steps', title: 'Math with Numbers', xp: 30,
+        body: `<p>JavaScript can do math! <code>+</code> add, <code>-</code> subtract, <code>*</code> multiply, <code>/</code> divide.</p>
             <pre><code>let a = 10
 let b = 3
 console.log(a + b)  // 13
-console.log(a - b)  // 7
-console.log(a * b)  // 30
-console.log(a / b)  // 3.333...</code></pre>
-            <p>The symbols: <code>+</code> add, <code>-</code> subtract, <code>*</code> multiply, <code>/</code> divide.</p>
-            <p><strong>Your task:</strong> Create two variables <code>x</code> and <code>y</code>. Set <code>x</code> to <code>8</code> and <code>y</code> to <code>4</code>. Print <code>x * y</code>.</p>
-        `,
+console.log(a * b)  // 30</code></pre>
+            <p><strong>Your task:</strong> Create <code>x = 8</code> and <code>y = 4</code>. Print <code>x * y</code>.</p>`,
         starter: '// Create x and y, then print x * y\n',
         hint: 'let x = 8\nlet y = 4\nconsole.log(x * y)',
-        check(output) {
-            return output.trim() === '32';
-        }
+        check(output) { return output.trim() === '32'; }
     },
     {
-        id: 'strings',
-        chapter: 'Chapter 2: Data Types',
-        title: 'Playing with Strings',
-        xp: 35,
-        body: `
-            <p><span class="concept">Strings</span> are text. You can combine them with <code>+</code> — this is called <span class="highlight">concatenation</span>.</p>
+        id: 'js_strings', chapter: 'Chapter 2: Data Types', title: 'Playing with Strings', xp: 35,
+        body: `<p>You can combine strings with <code>+</code> — this is called <span class="highlight">concatenation</span>.</p>
             <pre><code>let first = "Code"
 let second = "Quest"
-console.log(first + second)  // "CodeQuest"</code></pre>
-            <p>Want a space? Add it as a string: <code>first + " " + second</code></p>
-            <p><strong>Your task:</strong> Create <code>firstName</code> set to <code>"Super"</code> and <code>lastName</code> set to <code>"Coder"</code>. Print them together with a space in between.</p>
-        `,
+console.log(first + " " + second)  // "Code Quest"</code></pre>
+            <p><strong>Your task:</strong> Create <code>firstName = "Super"</code> and <code>lastName = "Coder"</code>. Print them with a space between.</p>`,
         starter: '// Combine firstName and lastName with a space\n',
         hint: 'let firstName = "Super"\nlet lastName = "Coder"\nconsole.log(firstName + " " + lastName)',
-        check(output) {
-            return output.trim() === 'Super Coder';
-        }
+        check(output) { return output.trim() === 'Super Coder'; }
     },
     {
-        id: 'if_else',
-        chapter: 'Chapter 2: Data Types',
-        title: 'Making Decisions: if/else',
-        xp: 40,
-        body: `
-            <p>Programs make decisions with <span class="concept">if statements</span>.</p>
+        id: 'js_if', chapter: 'Chapter 2: Data Types', title: 'Making Decisions: if/else', xp: 40,
+        body: `<p>Programs make decisions with <span class="concept">if statements</span>.</p>
             <pre><code>let score = 85
-
 if (score >= 90) {
     console.log("A grade!")
 } else if (score >= 80) {
@@ -719,350 +1072,398 @@ if (score >= 90) {
 } else {
     console.log("Keep trying!")
 }</code></pre>
-            <p>Comparison operators: <code>></code> greater, <code><</code> less, <code>>=</code> greater or equal, <code><=</code> less or equal, <code>===</code> exactly equals.</p>
-            <p><strong>Your task:</strong> Create a variable <code>temperature</code> set to <code>35</code>. If it's greater than 30, print <code>"It's hot!"</code>. Otherwise print <code>"It's cool."</code></p>
-        `,
+            <p><strong>Your task:</strong> Create <code>temperature = 35</code>. If it's greater than 30, print <code>"It's hot!"</code>. Otherwise print <code>"It's cool."</code></p>`,
         starter: '// Check the temperature\nlet temperature = 35\n',
         hint: 'if (temperature > 30) {\n    console.log("It\'s hot!")\n} else {\n    console.log("It\'s cool.")\n}',
-        check(output) {
-            return output.trim() === "It's hot!";
-        }
+        check(output) { return output.trim() === "It's hot!"; }
     },
     {
-        id: 'loops',
-        chapter: 'Chapter 3: Loops',
-        title: 'For Loops: Repeat Yourself',
-        xp: 45,
-        body: `
-            <p>A <span class="concept">for loop</span> repeats code a set number of times.</p>
+        id: 'js_for', chapter: 'Chapter 3: Loops', title: 'For Loops', xp: 45,
+        body: `<p>A <span class="concept">for loop</span> repeats code a set number of times.</p>
             <pre><code>for (let i = 0; i < 5; i++) {
     console.log(i)
 }
 // Prints: 0, 1, 2, 3, 4</code></pre>
-            <p>Breaking it down:</p>
-            <p><code>let i = 0</code> — start at 0<br>
-            <code>i < 5</code> — keep going while i is less than 5<br>
-            <code>i++</code> — add 1 to i each time (same as <code>i = i + 1</code>)</p>
-            <p><strong>Your task:</strong> Write a for loop that prints the numbers <code>1</code> through <code>5</code> (each on its own line).</p>
-        `,
+            <p><code>let i = 0</code> — start at 0. <code>i < 5</code> — keep going while less than 5. <code>i++</code> — add 1 each time.</p>
+            <p><strong>Your task:</strong> Print numbers <code>1</code> through <code>5</code>.</p>`,
         starter: '// Print numbers 1 through 5\n',
         hint: 'for (let i = 1; i <= 5; i++) {\n    console.log(i)\n}',
-        check(output) {
-            return output.trim() === '1\n2\n3\n4\n5';
-        }
+        check(output) { return output.trim() === '1\n2\n3\n4\n5'; }
     },
     {
-        id: 'while_loop',
-        chapter: 'Chapter 3: Loops',
-        title: 'While Loops',
-        xp: 40,
-        body: `
-            <p>A <span class="concept">while loop</span> keeps going as long as a condition is true.</p>
+        id: 'js_while', chapter: 'Chapter 3: Loops', title: 'While Loops', xp: 40,
+        body: `<p>A <span class="concept">while loop</span> keeps going as long as a condition is true.</p>
             <pre><code>let count = 0
 while (count < 3) {
     console.log(count)
     count++
-}
-// Prints: 0, 1, 2</code></pre>
-            <p>Be careful — if the condition never becomes false, the loop runs forever!</p>
-            <p><strong>Your task:</strong> Use a while loop to print <code>"Go!"</code> exactly 3 times.</p>
-        `,
+}</code></pre>
+            <p><strong>Your task:</strong> Use a while loop to print <code>"Go!"</code> exactly 3 times.</p>`,
         starter: '// Print "Go!" 3 times using a while loop\n',
         hint: 'let count = 0\nwhile (count < 3) {\n    console.log("Go!")\n    count++\n}',
-        check(output) {
-            return output.trim() === 'Go!\nGo!\nGo!';
-        }
+        check(output) { return output.trim() === 'Go!\nGo!\nGo!'; }
     },
     {
-        id: 'arrays',
-        chapter: 'Chapter 4: Collections',
-        title: 'Arrays: Lists of Things',
-        xp: 45,
-        body: `
-            <p>An <span class="concept">array</span> holds multiple values in a list.</p>
+        id: 'js_arrays', chapter: 'Chapter 4: Collections', title: 'Arrays: Lists of Things', xp: 45,
+        body: `<p>An <span class="concept">array</span> holds multiple values in a list.</p>
             <pre><code>let fruits = ["apple", "banana", "cherry"]
 console.log(fruits[0])  // "apple"
-console.log(fruits[1])  // "banana"
-console.log(fruits.length)  // 3</code></pre>
-            <p>Arrays start counting at <span class="highlight">0</span>, not 1. So the first item is <code>[0]</code>.</p>
-            <p><strong>Your task:</strong> Create an array called <code>colors</code> with <code>"red"</code>, <code>"green"</code>, <code>"blue"</code>. Print the second item.</p>
-        `,
+console.log(fruits[1])  // "banana"</code></pre>
+            <p>Arrays start counting at <span class="highlight">0</span>, not 1!</p>
+            <p><strong>Your task:</strong> Create <code>colors</code> with <code>"red", "green", "blue"</code>. Print the second item.</p>`,
         starter: '// Create a colors array and print the second item\n',
         hint: 'let colors = ["red", "green", "blue"]\nconsole.log(colors[1])',
-        check(output) {
-            return output.trim() === 'green';
-        }
+        check(output) { return output.trim() === 'green'; }
     },
     {
-        id: 'loop_array',
-        chapter: 'Chapter 4: Collections',
-        title: 'Looping Through Arrays',
-        xp: 50,
-        body: `
-            <p>You can combine loops and arrays to do something with every item.</p>
+        id: 'js_loop_array', chapter: 'Chapter 4: Collections', title: 'Looping Through Arrays', xp: 50,
+        body: `<p>You can loop through every item in an array:</p>
             <pre><code>let pets = ["cat", "dog", "fish"]
-for (let i = 0; i < pets.length; i++) {
-    console.log(pets[i])
-}</code></pre>
-            <p>Or use the simpler <code>for...of</code> loop:</p>
-            <pre><code>for (let pet of pets) {
+for (let pet of pets) {
     console.log(pet)
 }</code></pre>
-            <p><strong>Your task:</strong> Create an array <code>numbers</code> with values <code>[10, 20, 30]</code>. Loop through and print each one.</p>
-        `,
+            <p><strong>Your task:</strong> Create <code>numbers = [10, 20, 30]</code>. Loop through and print each one.</p>`,
         starter: '// Create numbers array and print each value\n',
         hint: 'let numbers = [10, 20, 30]\nfor (let num of numbers) {\n    console.log(num)\n}',
-        check(output) {
-            return output.trim() === '10\n20\n30';
-        }
+        check(output) { return output.trim() === '10\n20\n30'; }
     },
     {
-        id: 'functions',
-        chapter: 'Chapter 5: Functions',
-        title: 'Functions: Reusable Code',
-        xp: 50,
-        body: `
-            <p>A <span class="concept">function</span> is a reusable block of code you give a name.</p>
+        id: 'js_functions', chapter: 'Chapter 5: Functions', title: 'Functions: Reusable Code', xp: 50,
+        body: `<p>A <span class="concept">function</span> is a reusable block of code you give a name.</p>
             <pre><code>function sayHello() {
     console.log("Hello there!")
 }
-
-sayHello()  // prints "Hello there!"
-sayHello()  // prints it again!</code></pre>
-            <p>You <span class="highlight">define</span> it once, then <span class="highlight">call</span> it whenever you need it.</p>
-            <p><strong>Your task:</strong> Create a function called <code>cheer</code> that prints <code>"Let's go!"</code>. Call it twice.</p>
-        `,
+sayHello()  // prints "Hello there!"</code></pre>
+            <p><strong>Your task:</strong> Create a function <code>cheer</code> that prints <code>"Let's go!"</code>. Call it twice.</p>`,
         starter: '// Define the cheer function and call it twice\n',
         hint: 'function cheer() {\n    console.log("Let\'s go!")\n}\ncheer()\ncheer()',
-        check(output) {
-            return output.trim() === "Let's go!\nLet's go!";
-        }
+        check(output) { return output.trim() === "Let's go!\nLet's go!"; }
     },
     {
-        id: 'parameters',
-        chapter: 'Chapter 5: Functions',
-        title: 'Function Parameters',
-        xp: 55,
-        body: `
-            <p>Functions can accept <span class="concept">parameters</span> — inputs that change what they do.</p>
+        id: 'js_params', chapter: 'Chapter 5: Functions', title: 'Function Parameters', xp: 55,
+        body: `<p>Functions can accept <span class="concept">parameters</span> — inputs that change what they do.</p>
             <pre><code>function greet(name) {
     console.log("Hello, " + name + "!")
 }
-
-greet("Dylan")   // "Hello, Dylan!"
-greet("World")   // "Hello, World!"</code></pre>
-            <p><code>name</code> is a parameter — a placeholder that gets filled when you call the function.</p>
-            <p><strong>Your task:</strong> Create a function <code>double</code> that takes a number and prints it multiplied by 2. Call it with <code>7</code>.</p>
-        `,
+greet("Dylan")  // "Hello, Dylan!"</code></pre>
+            <p><strong>Your task:</strong> Create <code>double</code> that takes a number and prints it * 2. Call it with <code>7</code>.</p>`,
         starter: '// Create the double function\n',
         hint: 'function double(num) {\n    console.log(num * 2)\n}\ndouble(7)',
-        check(output) {
-            return output.trim() === '14';
-        }
+        check(output) { return output.trim() === '14'; }
     },
     {
-        id: 'return',
-        chapter: 'Chapter 5: Functions',
-        title: 'Return Values',
-        xp: 55,
-        body: `
-            <p>Functions can <span class="concept">return</span> a value back to you, instead of just printing.</p>
+        id: 'js_return', chapter: 'Chapter 5: Functions', title: 'Return Values', xp: 55,
+        body: `<p>Functions can <span class="concept">return</span> a value back to you.</p>
             <pre><code>function add(a, b) {
     return a + b
 }
-
 let result = add(3, 5)
 console.log(result)  // 8</code></pre>
-            <p><code>return</code> sends the answer back. You can save it in a variable or use it directly.</p>
-            <p><strong>Your task:</strong> Create a function <code>multiply</code> that takes two numbers and <strong>returns</strong> their product. Print the result of <code>multiply(6, 7)</code>.</p>
-        `,
+            <p><strong>Your task:</strong> Create <code>multiply(a, b)</code> that returns a * b. Print <code>multiply(6, 7)</code>.</p>`,
         starter: '// Create multiply function that returns the product\n',
         hint: 'function multiply(a, b) {\n    return a * b\n}\nconsole.log(multiply(6, 7))',
-        check(output) {
-            return output.trim() === '42';
-        }
+        check(output) { return output.trim() === '42'; }
     },
     {
-        id: 'objects',
-        chapter: 'Chapter 6: Objects',
-        title: 'Objects: Grouping Data',
-        xp: 60,
-        body: `
-            <p>An <span class="concept">object</span> groups related data together with named properties.</p>
+        id: 'js_objects', chapter: 'Chapter 6: Objects', title: 'Objects: Grouping Data', xp: 60,
+        body: `<p>An <span class="concept">object</span> groups related data with named properties.</p>
             <pre><code>let player = {
     name: "Dylan",
     score: 100,
     level: 5
 }
-
-console.log(player.name)   // "Dylan"
-console.log(player.score)  // 100</code></pre>
-            <p>Use <code>.</code> (dot) to access properties. Think of objects like a form with labeled fields.</p>
-            <p><strong>Your task:</strong> Create an object <code>pet</code> with properties <code>name</code> set to <code>"Buddy"</code> and <code>type</code> set to <code>"dog"</code>. Print <code>pet.name</code>.</p>
-        `,
+console.log(player.name)  // "Dylan"</code></pre>
+            <p><strong>Your task:</strong> Create <code>pet</code> with <code>name: "Buddy"</code> and <code>type: "dog"</code>. Print <code>pet.name</code>.</p>`,
         starter: '// Create a pet object and print its name\n',
         hint: 'let pet = {\n    name: "Buddy",\n    type: "dog"\n}\nconsole.log(pet.name)',
-        check(output) {
-            return output.trim() === 'Buddy';
-        }
+        check(output) { return output.trim() === 'Buddy'; }
     },
     {
-        id: 'final_boss',
-        chapter: 'Chapter 7: Boss Level',
-        title: 'Final Boss: FizzBuzz',
-        xp: 100,
-        body: `
-            <p>Time for the classic coding challenge! This uses <strong>everything</strong> you've learned.</p>
-            <p><strong>The rules:</strong></p>
-            <p>Print numbers from 1 to 15, but:<br>
-            - If divisible by 3, print <code>"Fizz"</code> instead<br>
-            - If divisible by 5, print <code>"Buzz"</code> instead<br>
-            - If divisible by <strong>both</strong> 3 and 5, print <code>"FizzBuzz"</code></p>
-            <p><strong>Hint:</strong> Use <code>%</code> (modulo) to check divisibility. <code>6 % 3 === 0</code> means 6 is divisible by 3.</p>
-            <p>Expected output starts: <code>1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz</code></p>
-        `,
+        id: 'js_fizzbuzz', chapter: 'Chapter 7: Boss Level', title: 'Final Boss: FizzBuzz', xp: 100,
+        body: `<p>Time for the classic coding challenge! Uses <strong>everything</strong> you've learned.</p>
+            <p>Print numbers 1 to 15, but:<br>
+            - If divisible by 3, print <code>"Fizz"</code><br>
+            - If divisible by 5, print <code>"Buzz"</code><br>
+            - If divisible by both, print <code>"FizzBuzz"</code></p>
+            <p>Use <code>%</code> (modulo) — <code>6 % 3 === 0</code> means 6 is divisible by 3.</p>`,
         starter: '// FizzBuzz: Print 1 to 15 with the rules above\n',
         hint: 'for (let i = 1; i <= 15; i++) {\n    if (i % 3 === 0 && i % 5 === 0) {\n        console.log("FizzBuzz")\n    } else if (i % 3 === 0) {\n        console.log("Fizz")\n    } else if (i % 5 === 0) {\n        console.log("Buzz")\n    } else {\n        console.log(i)\n    }\n}',
-        check(output) {
-            const expected = '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz';
-            return output.trim() === expected;
-        }
+        check(output) { return output.trim() === '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz'; }
     }
 ];
 
-const challenges = [
+const pythonLessons = [
     {
-        id: 'ch_countdown',
-        title: 'Countdown!',
-        desc: 'Print numbers from 10 down to 1.',
-        difficulty: 'easy',
-        xp: 40,
-        starter: '// Count down from 10 to 1\n',
-        hint: 'for (let i = 10; i >= 1; i--) {\n    console.log(i)\n}',
-        check(output) {
-            return output.trim() === '10\n9\n8\n7\n6\n5\n4\n3\n2\n1';
-        }
+        id: 'py_hello', chapter: 'Chapter 1: First Steps', title: 'Hello, World!', xp: 25,
+        body: `<p>In Python, we use <code>print()</code> to show text on screen.</p>
+            <pre><code>print("Hello, World!")</code></pre>
+            <p>Text must be wrapped in <span class="highlight">quotes</span>.</p>
+            <p><strong>Your task:</strong> Print <code>Hello, World!</code></p>`,
+        starter: '# Print "Hello, World!" below\n',
+        hint: 'print("Hello, World!")',
+        check(output) { return output.trim().includes('Hello, World!'); }
     },
     {
-        id: 'ch_sum',
-        title: 'Sum it Up',
-        desc: 'Calculate the sum of numbers 1 to 10 and print it.',
-        difficulty: 'easy',
-        xp: 45,
-        starter: '// Find the sum of 1 + 2 + 3 + ... + 10\n',
-        hint: 'let sum = 0\nfor (let i = 1; i <= 10; i++) {\n    sum = sum + i\n}\nconsole.log(sum)',
-        check(output) {
-            return output.trim() === '55';
-        }
+        id: 'py_variables', chapter: 'Chapter 1: First Steps', title: 'Variables: Storing Data', xp: 30,
+        body: `<p>In Python, you create variables by just typing a name and <code>=</code>. No <code>let</code> needed!</p>
+            <pre><code>name = "Dylan"
+age = 15
+score = 99.5</code></pre>
+            <p><strong>Your task:</strong> Create a variable <code>greeting</code> set to <code>"Hello!"</code>, then print it.</p>`,
+        starter: '# Create a variable called greeting\n# Then print it\n',
+        hint: 'greeting = "Hello!"\nprint(greeting)',
+        check(output) { return output.trim() === 'Hello!'; }
     },
     {
-        id: 'ch_even',
-        title: 'Even Numbers',
-        desc: 'Print only the even numbers from 1 to 20.',
-        difficulty: 'easy',
-        xp: 45,
-        starter: '// Print even numbers from 1 to 20\n',
-        hint: 'for (let i = 1; i <= 20; i++) {\n    if (i % 2 === 0) {\n        console.log(i)\n    }\n}',
-        check(output) {
-            return output.trim() === '2\n4\n6\n8\n10\n12\n14\n16\n18\n20';
-        }
+        id: 'py_math', chapter: 'Chapter 1: First Steps', title: 'Math with Numbers', xp: 30,
+        body: `<p>Python does math: <code>+</code> add, <code>-</code> subtract, <code>*</code> multiply, <code>/</code> divide.</p>
+            <pre><code>a = 10
+b = 3
+print(a + b)  # 13
+print(a * b)  # 30</code></pre>
+            <p><strong>Your task:</strong> Create <code>x = 8</code> and <code>y = 4</code>. Print <code>x * y</code>.</p>`,
+        starter: '# Create x and y, then print x * y\n',
+        hint: 'x = 8\ny = 4\nprint(x * y)',
+        check(output) { return output.trim() === '32'; }
     },
     {
-        id: 'ch_reverse',
-        title: 'Reverse a Word',
-        desc: 'Reverse the string "hello" and print it.',
-        difficulty: 'medium',
-        xp: 60,
-        starter: '// Reverse the word "hello"\nlet word = "hello"\n',
-        hint: 'console.log(word.split("").reverse().join(""))',
-        check(output) {
-            return output.trim() === 'olleh';
-        }
+        id: 'py_strings', chapter: 'Chapter 2: Data Types', title: 'Playing with Strings', xp: 35,
+        body: `<p>Combine strings with <code>+</code> or use <span class="highlight">f-strings</span>:</p>
+            <pre><code>first = "Code"
+second = "Quest"
+print(first + " " + second)  # "Code Quest"
+print(f"{first} {second}")   # same thing!</code></pre>
+            <p><strong>Your task:</strong> Create <code>first_name = "Super"</code> and <code>last_name = "Coder"</code>. Print them with a space between.</p>`,
+        starter: '# Combine first_name and last_name\n',
+        hint: 'first_name = "Super"\nlast_name = "Coder"\nprint(first_name + " " + last_name)',
+        check(output) { return output.trim() === 'Super Coder'; }
     },
     {
-        id: 'ch_max',
-        title: 'Find the Max',
-        desc: 'Find and print the largest number in [3, 7, 2, 9, 4].',
-        difficulty: 'medium',
-        xp: 65,
-        starter: '// Find the largest number\nlet nums = [3, 7, 2, 9, 4]\n',
-        hint: 'let max = nums[0]\nfor (let n of nums) {\n    if (n > max) {\n        max = n\n    }\n}\nconsole.log(max)',
-        check(output) {
-            return output.trim() === '9';
-        }
+        id: 'py_if', chapter: 'Chapter 2: Data Types', title: 'Making Decisions: if/else', xp: 40,
+        body: `<p>Python uses <span class="concept">if</span>, <span class="concept">elif</span>, and <span class="concept">else</span>. No curly braces — just indent!</p>
+            <pre><code>score = 85
+if score >= 90:
+    print("A grade!")
+elif score >= 80:
+    print("B grade!")
+else:
+    print("Keep trying!")</code></pre>
+            <p><strong>Your task:</strong> Create <code>temperature = 35</code>. If greater than 30, print <code>"It's hot!"</code>. Otherwise print <code>"It's cool."</code></p>`,
+        starter: '# Check the temperature\ntemperature = 35\n',
+        hint: 'if temperature > 30:\n    print("It\'s hot!")\nelse:\n    print("It\'s cool.")',
+        check(output) { return output.trim() === "It's hot!"; }
     },
     {
-        id: 'ch_pyramid',
-        title: 'Star Pyramid',
-        desc: 'Print a pyramid of stars with 5 rows:\n*\n**\n***\n****\n*****',
-        difficulty: 'medium',
-        xp: 70,
-        starter: '// Build a star pyramid with 5 rows\n',
-        hint: 'for (let i = 1; i <= 5; i++) {\n    console.log("*".repeat(i))\n}',
-        check(output) {
-            return output.trim() === '*\n**\n***\n****\n*****';
-        }
+        id: 'py_for', chapter: 'Chapter 3: Loops', title: 'For Loops', xp: 45,
+        body: `<p>Python's <span class="concept">for loop</span> with <code>range()</code>:</p>
+            <pre><code>for i in range(5):
+    print(i)
+# Prints: 0, 1, 2, 3, 4</code></pre>
+            <p><code>range(1, 6)</code> gives 1, 2, 3, 4, 5.</p>
+            <p><strong>Your task:</strong> Print numbers <code>1</code> through <code>5</code>.</p>`,
+        starter: '# Print numbers 1 through 5\n',
+        hint: 'for i in range(1, 6):\n    print(i)',
+        check(output) { return output.trim() === '1\n2\n3\n4\n5'; }
     },
     {
-        id: 'ch_factorial',
-        title: 'Factorial',
-        desc: 'Create a function that returns the factorial of 5 (5! = 120).',
-        difficulty: 'hard',
-        xp: 80,
-        starter: '// Calculate 5! (5 factorial = 5 * 4 * 3 * 2 * 1)\n',
-        hint: 'function factorial(n) {\n    let result = 1\n    for (let i = 1; i <= n; i++) {\n        result = result * i\n    }\n    return result\n}\nconsole.log(factorial(5))',
-        check(output) {
-            return output.trim() === '120';
-        }
+        id: 'py_while', chapter: 'Chapter 3: Loops', title: 'While Loops', xp: 40,
+        body: `<p>A <span class="concept">while loop</span> keeps going while a condition is true.</p>
+            <pre><code>count = 0
+while count < 3:
+    print(count)
+    count += 1</code></pre>
+            <p><strong>Your task:</strong> Print <code>"Go!"</code> exactly 3 times using a while loop.</p>`,
+        starter: '# Print "Go!" 3 times using a while loop\n',
+        hint: 'count = 0\nwhile count < 3:\n    print("Go!")\n    count += 1',
+        check(output) { return output.trim() === 'Go!\nGo!\nGo!'; }
     },
     {
-        id: 'ch_palindrome',
-        title: 'Palindrome Checker',
-        desc: 'Check if "racecar" is a palindrome. Print true or false.',
-        difficulty: 'hard',
-        xp: 85,
-        starter: '// Is "racecar" a palindrome?\nlet word = "racecar"\n',
-        hint: 'let reversed = word.split("").reverse().join("")\nconsole.log(word === reversed)',
-        check(output) {
-            return output.trim() === 'true';
-        }
+        id: 'py_lists', chapter: 'Chapter 4: Collections', title: 'Lists', xp: 45,
+        body: `<p>Python uses <span class="concept">lists</span> (like JavaScript arrays).</p>
+            <pre><code>fruits = ["apple", "banana", "cherry"]
+print(fruits[0])  # "apple"
+print(fruits[1])  # "banana"</code></pre>
+            <p>Lists start at <span class="highlight">0</span>!</p>
+            <p><strong>Your task:</strong> Create <code>colors</code> with <code>"red", "green", "blue"</code>. Print the second item.</p>`,
+        starter: '# Create a colors list and print the second item\n',
+        hint: 'colors = ["red", "green", "blue"]\nprint(colors[1])',
+        check(output) { return output.trim() === 'green'; }
+    },
+    {
+        id: 'py_loop_list', chapter: 'Chapter 4: Collections', title: 'Looping Through Lists', xp: 50,
+        body: `<p>Loop through a list with <code>for...in</code>:</p>
+            <pre><code>pets = ["cat", "dog", "fish"]
+for pet in pets:
+    print(pet)</code></pre>
+            <p><strong>Your task:</strong> Create <code>numbers = [10, 20, 30]</code>. Loop and print each one.</p>`,
+        starter: '# Create numbers list and print each value\n',
+        hint: 'numbers = [10, 20, 30]\nfor num in numbers:\n    print(num)',
+        check(output) { return output.trim() === '10\n20\n30'; }
+    },
+    {
+        id: 'py_functions', chapter: 'Chapter 5: Functions', title: 'Functions', xp: 50,
+        body: `<p>Define functions with <code>def</code>:</p>
+            <pre><code>def say_hello():
+    print("Hello there!")
+
+say_hello()  # prints "Hello there!"</code></pre>
+            <p><strong>Your task:</strong> Create a function <code>cheer</code> that prints <code>"Let's go!"</code>. Call it twice.</p>`,
+        starter: '# Define the cheer function and call it twice\n',
+        hint: 'def cheer():\n    print("Let\'s go!")\n\ncheer()\ncheer()',
+        check(output) { return output.trim() === "Let's go!\nLet's go!"; }
+    },
+    {
+        id: 'py_params', chapter: 'Chapter 5: Functions', title: 'Function Parameters', xp: 55,
+        body: `<p>Functions can take <span class="concept">parameters</span>:</p>
+            <pre><code>def greet(name):
+    print("Hello, " + name + "!")
+
+greet("Dylan")  # "Hello, Dylan!"</code></pre>
+            <p><strong>Your task:</strong> Create <code>double</code> that takes a number and prints it * 2. Call with <code>7</code>.</p>`,
+        starter: '# Create the double function\n',
+        hint: 'def double(num):\n    print(num * 2)\n\ndouble(7)',
+        check(output) { return output.trim() === '14'; }
+    },
+    {
+        id: 'py_return', chapter: 'Chapter 5: Functions', title: 'Return Values', xp: 55,
+        body: `<p>Functions can <span class="concept">return</span> a value:</p>
+            <pre><code>def add(a, b):
+    return a + b
+
+result = add(3, 5)
+print(result)  # 8</code></pre>
+            <p><strong>Your task:</strong> Create <code>multiply(a, b)</code> that returns a * b. Print <code>multiply(6, 7)</code>.</p>`,
+        starter: '# Create multiply function that returns the product\n',
+        hint: 'def multiply(a, b):\n    return a * b\n\nprint(multiply(6, 7))',
+        check(output) { return output.trim() === '42'; }
+    },
+    {
+        id: 'py_dicts', chapter: 'Chapter 6: Dictionaries', title: 'Dictionaries', xp: 60,
+        body: `<p>A <span class="concept">dictionary</span> stores key-value pairs (like JavaScript objects):</p>
+            <pre><code>player = {
+    "name": "Dylan",
+    "score": 100,
+    "level": 5
+}
+print(player["name"])  # "Dylan"</code></pre>
+            <p><strong>Your task:</strong> Create <code>pet</code> with <code>"name": "Buddy"</code> and <code>"type": "dog"</code>. Print <code>pet["name"]</code>.</p>`,
+        starter: '# Create a pet dictionary and print its name\n',
+        hint: 'pet = {"name": "Buddy", "type": "dog"}\nprint(pet["name"])',
+        check(output) { return output.trim() === 'Buddy'; }
+    },
+    {
+        id: 'py_fizzbuzz', chapter: 'Chapter 7: Boss Level', title: 'Final Boss: FizzBuzz', xp: 100,
+        body: `<p>The classic challenge! Print 1 to 15, but:<br>
+            - Divisible by 3 → <code>"Fizz"</code><br>
+            - Divisible by 5 → <code>"Buzz"</code><br>
+            - Both → <code>"FizzBuzz"</code></p>
+            <p>Use <code>%</code> (modulo) — <code>6 % 3 == 0</code> means divisible by 3.</p>`,
+        starter: '# FizzBuzz: Print 1 to 15 with the rules above\n',
+        hint: 'for i in range(1, 16):\n    if i % 3 == 0 and i % 5 == 0:\n        print("FizzBuzz")\n    elif i % 3 == 0:\n        print("Fizz")\n    elif i % 5 == 0:\n        print("Buzz")\n    else:\n        print(i)',
+        check(output) { return output.trim() === '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz'; }
     }
+];
+
+const jsChallenges = [
+    { id: 'jsc_countdown', title: 'Countdown!', desc: 'Print numbers from 10 down to 1.', difficulty: 'easy', xp: 40,
+      starter: '// Count down from 10 to 1\n',
+      hint: 'for (let i = 10; i >= 1; i--) {\n    console.log(i)\n}',
+      check(o) { return o.trim() === '10\n9\n8\n7\n6\n5\n4\n3\n2\n1'; } },
+    { id: 'jsc_sum', title: 'Sum it Up', desc: 'Print the sum of numbers 1 to 10.', difficulty: 'easy', xp: 45,
+      starter: '// Find the sum of 1 + 2 + ... + 10\n',
+      hint: 'let sum = 0\nfor (let i = 1; i <= 10; i++) sum += i\nconsole.log(sum)',
+      check(o) { return o.trim() === '55'; } },
+    { id: 'jsc_even', title: 'Even Numbers', desc: 'Print even numbers from 1 to 20.', difficulty: 'easy', xp: 45,
+      starter: '// Print even numbers from 1 to 20\n',
+      hint: 'for (let i = 2; i <= 20; i += 2) console.log(i)',
+      check(o) { return o.trim() === '2\n4\n6\n8\n10\n12\n14\n16\n18\n20'; } },
+    { id: 'jsc_reverse', title: 'Reverse a Word', desc: 'Reverse "hello" and print it.', difficulty: 'medium', xp: 60,
+      starter: 'let word = "hello"\n// Reverse it and print\n',
+      hint: 'console.log(word.split("").reverse().join(""))',
+      check(o) { return o.trim() === 'olleh'; } },
+    { id: 'jsc_max', title: 'Find the Max', desc: 'Find the largest in [3, 7, 2, 9, 4].', difficulty: 'medium', xp: 65,
+      starter: 'let nums = [3, 7, 2, 9, 4]\n// Find and print the largest\n',
+      hint: 'console.log(Math.max(...nums))',
+      check(o) { return o.trim() === '9'; } },
+    { id: 'jsc_pyramid', title: 'Star Pyramid', desc: 'Print 5 rows: *, **, ***, ****, *****', difficulty: 'medium', xp: 70,
+      starter: '// Build a star pyramid with 5 rows\n',
+      hint: 'for (let i = 1; i <= 5; i++) console.log("*".repeat(i))',
+      check(o) { return o.trim() === '*\n**\n***\n****\n*****'; } },
+    { id: 'jsc_factorial', title: 'Factorial', desc: 'Calculate 5! (5*4*3*2*1 = 120).', difficulty: 'hard', xp: 80,
+      starter: '// Calculate 5!\n',
+      hint: 'let result = 1\nfor (let i = 1; i <= 5; i++) result *= i\nconsole.log(result)',
+      check(o) { return o.trim() === '120'; } },
+    { id: 'jsc_palindrome', title: 'Palindrome', desc: 'Check if "racecar" is a palindrome. Print true/false.', difficulty: 'hard', xp: 85,
+      starter: 'let word = "racecar"\n// Is it a palindrome?\n',
+      hint: 'console.log(word === word.split("").reverse().join(""))',
+      check(o) { return o.trim() === 'true'; } }
+];
+
+const pythonChallenges = [
+    { id: 'pyc_countdown', title: 'Countdown!', desc: 'Print numbers from 10 down to 1.', difficulty: 'easy', xp: 40,
+      starter: '# Count down from 10 to 1\n',
+      hint: 'for i in range(10, 0, -1):\n    print(i)',
+      check(o) { return o.trim() === '10\n9\n8\n7\n6\n5\n4\n3\n2\n1'; } },
+    { id: 'pyc_sum', title: 'Sum it Up', desc: 'Print the sum of numbers 1 to 10.', difficulty: 'easy', xp: 45,
+      starter: '# Find the sum of 1 + 2 + ... + 10\n',
+      hint: 'total = 0\nfor i in range(1, 11):\n    total += i\nprint(total)',
+      check(o) { return o.trim() === '55'; } },
+    { id: 'pyc_even', title: 'Even Numbers', desc: 'Print even numbers from 1 to 20.', difficulty: 'easy', xp: 45,
+      starter: '# Print even numbers from 1 to 20\n',
+      hint: 'for i in range(2, 21, 2):\n    print(i)',
+      check(o) { return o.trim() === '2\n4\n6\n8\n10\n12\n14\n16\n18\n20'; } },
+    { id: 'pyc_reverse', title: 'Reverse a Word', desc: 'Reverse "hello" and print it.', difficulty: 'medium', xp: 60,
+      starter: 'word = "hello"\n# Reverse it and print\n',
+      hint: 'print(word[::-1])',
+      check(o) { return o.trim() === 'olleh'; } },
+    { id: 'pyc_max', title: 'Find the Max', desc: 'Find the largest in [3, 7, 2, 9, 4].', difficulty: 'medium', xp: 65,
+      starter: 'nums = [3, 7, 2, 9, 4]\n# Find and print the largest\n',
+      hint: 'print(max(nums))',
+      check(o) { return o.trim() === '9'; } },
+    { id: 'pyc_pyramid', title: 'Star Pyramid', desc: 'Print 5 rows: *, **, ***, ****, *****', difficulty: 'medium', xp: 70,
+      starter: '# Build a star pyramid with 5 rows\n',
+      hint: 'for i in range(1, 6):\n    print("*" * i)',
+      check(o) { return o.trim() === '*\n**\n***\n****\n*****'; } },
+    { id: 'pyc_factorial', title: 'Factorial', desc: 'Calculate 5! (5*4*3*2*1 = 120).', difficulty: 'hard', xp: 80,
+      starter: '# Calculate 5!\n',
+      hint: 'result = 1\nfor i in range(1, 6):\n    result *= i\nprint(result)',
+      check(o) { return o.trim() === '120'; } },
+    { id: 'pyc_palindrome', title: 'Palindrome', desc: 'Check if "racecar" is a palindrome. Print True/False.', difficulty: 'hard', xp: 85,
+      starter: 'word = "racecar"\n# Is it a palindrome?\n',
+      hint: 'print(word == word[::-1])',
+      check(o) { return o.trim() === 'True'; } }
 ];
 
 const achievements = [
     { id: 'first_code', icon: '🐣', name: 'Hello World', desc: 'Complete your first lesson', xp: 10 },
     { id: 'three_lessons', icon: '📚', name: 'Bookworm', desc: 'Complete 3 lessons', xp: 25 },
     { id: 'five_lessons', icon: '🔥', name: 'On Fire', desc: 'Complete 5 lessons', xp: 50 },
-    { id: 'all_lessons', icon: '🎓', name: 'Graduate', desc: 'Complete all lessons', xp: 100 },
+    { id: 'all_lessons', icon: '🎓', name: 'Graduate', desc: 'Complete all lessons in a language', xp: 100 },
     { id: 'first_challenge', icon: '⚔️', name: 'Challenger', desc: 'Complete your first challenge', xp: 20 },
     { id: 'three_challenges', icon: '🏆', name: 'Champion', desc: 'Complete 3 challenges', xp: 50 },
-    { id: 'all_challenges', icon: '👑', name: 'Legend', desc: 'Complete all challenges', xp: 150 },
+    { id: 'all_challenges', icon: '👑', name: 'Legend', desc: 'Complete all challenges in a language', xp: 150 },
     { id: 'streak_3', icon: '⚡', name: 'Streak!', desc: 'Get 3 correct in a row', xp: 30 },
     { id: 'streak_5', icon: '💎', name: 'Unstoppable', desc: 'Get 5 correct in a row', xp: 75 },
-    { id: 'no_hints', icon: '🧠', name: 'Big Brain', desc: 'Complete 3 lessons without hints', xp: 50 },
+    { id: 'no_hints', icon: '🧠', name: 'Big Brain', desc: 'Complete 3 without hints', xp: 50 },
     { id: 'speed_demon', icon: '🚀', name: 'Speed Demon', desc: 'Complete a lesson in under 30 seconds', xp: 40 },
-    { id: 'boss_slayer', icon: '🐉', name: 'Boss Slayer', desc: 'Complete the FizzBuzz boss level', xp: 100 },
+    { id: 'boss_slayer', icon: '🐉', name: 'Boss Slayer', desc: 'Complete FizzBuzz', xp: 100 },
+    { id: 'bilingual', icon: '🌍', name: 'Bilingual', desc: 'Complete a lesson in both JS and Python', xp: 60 },
 ];
 
 // ==================== STATE ====================
 
-let state = loadState();
-
 function defaultState() {
     return {
-        xp: 0,
-        level: 1,
-        completedLessons: [],
-        completedChallenges: [],
+        xp: 0, level: 1,
+        completedLessons: [], completedChallenges: [],
         unlockedAchievements: [],
-        streak: 0,
-        noHintCount: 0,
-        currentTab: 'lessons',
-        currentLesson: 0,
-        currentChallenge: null,
+        streak: 0, noHintCount: 0,
+        currentTab: 'lessons', currentLesson: 0, currentChallenge: null,
         hintsUsed: {}
     };
 }
+
+let state = loadState();
 
 function loadState() {
     try {
@@ -1074,6 +1475,7 @@ function loadState() {
 
 function saveState() {
     localStorage.setItem('codequest_state', JSON.stringify(state));
+    saveToCloud();
 }
 
 // ==================== CORE ====================
@@ -1083,8 +1485,8 @@ let lessonStartTime = Date.now();
 function addXP(amount) {
     state.xp += amount;
     const needed = state.level * 100;
-    while (state.xp >= needed) {
-        state.xp -= needed;
+    while (state.xp >= state.level * 100) {
+        state.xp -= state.level * 100;
         state.level++;
     }
     updateTopBar();
@@ -1099,7 +1501,6 @@ function updateTopBar() {
     document.getElementById('xpBar').style.width = (state.xp / needed * 100) + '%';
     document.getElementById('completedCount').textContent = state.completedLessons.length + state.completedChallenges.length;
     document.getElementById('achievementCount').textContent = state.unlockedAchievements.length + '/' + achievements.length;
-
     const streakBadge = document.getElementById('streakBadge');
     if (state.streak >= 2) {
         streakBadge.style.display = 'inline';
@@ -1123,69 +1524,67 @@ function switchTab(tab) {
 
 function renderSidebar() {
     const container = document.getElementById('sidebarContent');
+    const lessons_ = getLessons();
+    const challenges_ = getChallenges();
+
     if (state.currentTab === 'lessons') {
-        container.innerHTML = lessons.map((l, i) => {
+        container.innerHTML = lessons_.map((l, i) => {
             const completed = state.completedLessons.includes(l.id);
-            const locked = i > 0 && !state.completedLessons.includes(lessons[i-1].id) && !completed;
+            const locked = i > 0 && !state.completedLessons.includes(lessons_[i-1].id) && !completed;
             const active = i === state.currentLesson;
-            return `
-                <div class="sidebar-section" style="padding: 4px 16px;">
-                    <div class="lesson-item ${completed ? 'completed' : ''} ${locked ? 'locked' : ''} ${active ? 'active' : ''}"
-                         onclick="${locked ? '' : `loadLesson(${i})`}">
-                        <div class="lesson-icon">${completed ? '✓' : locked ? '🔒' : i + 1}</div>
-                        <div class="lesson-info">
-                            <div class="lesson-name">${l.title}</div>
-                            <div class="lesson-xp">+${l.xp} XP</div>
-                        </div>
+            return `<div class="sidebar-section">
+                <div class="lesson-item ${completed ? 'completed' : ''} ${locked ? 'locked' : ''} ${active ? 'active' : ''}"
+                     onclick="${locked ? '' : `loadLesson(${i})`}">
+                    <div class="lesson-icon">${completed ? '✓' : locked ? '🔒' : i + 1}</div>
+                    <div class="lesson-info">
+                        <div class="lesson-name">${l.title}</div>
+                        <div class="lesson-xp">+${l.xp} XP</div>
                     </div>
                 </div>
-            `;
+            </div>`;
         }).join('');
     } else if (state.currentTab === 'challenges') {
-        container.innerHTML = challenges.map((c, i) => {
+        container.innerHTML = challenges_.map((c, i) => {
             const completed = state.completedChallenges.includes(c.id);
-            return `
-                <div class="sidebar-section" style="padding: 4px 16px;">
-                    <div class="challenge-item ${completed ? 'completed' : ''}" onclick="loadChallenge(${i})">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                            <div class="challenge-title">${completed ? '✓ ' : ''}${c.title}</div>
-                            <span class="difficulty ${c.difficulty}">${c.difficulty}</span>
-                        </div>
-                        <div class="challenge-desc">${c.desc.split('\n')[0]}</div>
-                        <div class="challenge-reward">+${c.xp} XP</div>
+            return `<div class="sidebar-section">
+                <div class="challenge-item ${completed ? 'completed' : ''}" onclick="loadChallenge(${i})">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                        <div class="challenge-title">${completed ? '✓ ' : ''}${c.title}</div>
+                        <span class="difficulty ${c.difficulty}">${c.difficulty}</span>
                     </div>
+                    <div class="challenge-desc">${c.desc.split('\n')[0]}</div>
+                    <div class="challenge-reward">+${c.xp} XP</div>
                 </div>
-            `;
+            </div>`;
         }).join('');
     } else {
         container.innerHTML = achievements.map(a => {
             const unlocked = state.unlockedAchievements.includes(a.id);
-            return `
-                <div class="sidebar-section" style="padding: 4px 16px;">
-                    <div class="achievement-item ${unlocked ? 'unlocked' : 'locked'}">
-                        <div class="achievement-icon">${a.icon}</div>
-                        <div>
-                            <div class="achievement-name">${unlocked ? a.name : '???'}</div>
-                            <div class="achievement-desc">${a.desc}</div>
-                        </div>
+            return `<div class="sidebar-section">
+                <div class="achievement-item ${unlocked ? 'unlocked' : 'locked'}">
+                    <div class="achievement-icon">${a.icon}</div>
+                    <div>
+                        <div class="achievement-name">${unlocked ? a.name : '???'}</div>
+                        <div class="achievement-desc">${a.desc}</div>
                     </div>
                 </div>
-            `;
+            </div>`;
         }).join('');
     }
 }
 
 function loadLesson(index) {
+    const lessons_ = getLessons();
+    if (index >= lessons_.length) index = 0;
     state.currentLesson = index;
     state.currentChallenge = null;
-    const lesson = lessons[index];
+    const lesson = lessons_[index];
     document.getElementById('lessonPanel').innerHTML = `
         <div class="lesson-header">
             <div class="lesson-chapter">${lesson.chapter}</div>
             <div class="lesson-title">${lesson.title}</div>
         </div>
-        <div class="lesson-body">${lesson.body}</div>
-    `;
+        <div class="lesson-body">${lesson.body}</div>`;
     document.getElementById('codeInput').value = lesson.starter;
     document.getElementById('outputContent').textContent = '';
     document.getElementById('resultBanner').className = 'result-banner';
@@ -1195,8 +1594,9 @@ function loadLesson(index) {
 }
 
 function loadChallenge(index) {
+    const challenges_ = getChallenges();
     state.currentChallenge = index;
-    const ch = challenges[index];
+    const ch = challenges_[index];
     document.getElementById('lessonPanel').innerHTML = `
         <div class="lesson-header">
             <div class="lesson-chapter">Challenge</div>
@@ -1205,9 +1605,8 @@ function loadChallenge(index) {
         <div class="lesson-body">
             <p>${ch.desc.replace(/\n/g, '<br>')}</p>
             <span class="difficulty ${ch.difficulty}">${ch.difficulty}</span>
-            &nbsp; <span class="challenge-reward">+${ch.xp} XP</span>
-        </div>
-    `;
+            &nbsp;<span class="challenge-reward">+${ch.xp} XP</span>
+        </div>`;
     document.getElementById('codeInput').value = ch.starter;
     document.getElementById('outputContent').textContent = '';
     document.getElementById('resultBanner').className = 'result-banner';
@@ -1225,72 +1624,88 @@ function renderAchievementsPage() {
         <div class="lesson-body">
             <p>Complete lessons and challenges to unlock achievements and earn bonus XP!</p>
             <p><strong>${state.unlockedAchievements.length}</strong> of <strong>${achievements.length}</strong> unlocked</p>
-        </div>
-    `;
+        </div>`;
 }
 
 // ==================== CODE EXECUTION ====================
 
-function runCode() {
-    const code = document.getElementById('codeInput').value;
-    const output = executeCode(code);
-    document.getElementById('outputContent').innerHTML = output.error
-        ? `<span class="error">${output.error}</span>`
-        : output.text;
-}
+function runCode() { executeAndShow(false); }
+function submitCode() { executeAndShow(true); }
 
-function submitCode() {
+async function executeAndShow(isSubmit) {
     const code = document.getElementById('codeInput').value;
-    const output = executeCode(code);
-
     const outputEl = document.getElementById('outputContent');
-    outputEl.innerHTML = output.error
-        ? `<span class="error">${output.error}</span>`
-        : output.text;
 
+    let output;
+    if (currentLang === 'python') {
+        outputEl.innerHTML = '<span class="success">Running Python...</span>';
+        output = await executePython(code);
+    } else {
+        output = executeJS(code);
+    }
+
+    outputEl.innerHTML = output.error
+        ? `<span class="error">${escapeHtml(output.error)}</span>`
+        : escapeHtml(output.text);
+
+    if (!isSubmit) return;
+
+    const challenges_ = getChallenges();
+    const lessons_ = getLessons();
     let item, isChallenge = false;
     if (state.currentTab === 'challenges' && state.currentChallenge !== null) {
-        item = challenges[state.currentChallenge];
+        item = challenges_[state.currentChallenge];
         isChallenge = true;
     } else {
-        item = lessons[state.currentLesson];
+        item = lessons_[state.currentLesson];
     }
 
     const passed = !output.error && item.check(output.text);
     showResult(passed, item, isChallenge);
 }
 
-function executeCode(code) {
+function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function executeJS(code) {
     let logs = [];
     const fakeConsole = {
-        log: (...args) => logs.push(args.map(a =>
-            typeof a === 'object' ? JSON.stringify(a) : String(a)
-        ).join(' '))
+        log: (...args) => logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '))
     };
-
-    // Safety: limit execution and prevent dangerous operations
-    const safeCode = `
-        "use strict";
-        const console = __console__;
-        const alert = undefined;
-        const prompt = undefined;
-        const confirm = undefined;
-        const fetch = undefined;
-        const XMLHttpRequest = undefined;
-        ${code}
-    `;
-
     try {
-        const fn = new Function('__console__', safeCode);
-        // Timeout protection
-        const start = Date.now();
+        const fn = new Function('__console__', `"use strict";const console=__console__;const alert=undefined,prompt=undefined,confirm=undefined,fetch=undefined,XMLHttpRequest=undefined;${code}`);
         fn(fakeConsole);
-        if (Date.now() - start > 3000) {
-            return { text: '', error: 'Code took too long to run!' };
-        }
         return { text: logs.join('\n'), error: null };
-    } catch (e) {
+    } catch(e) {
         return { text: '', error: e.toString() };
+    }
+}
+
+async function executePython(code) {
+    if (!pyodide) {
+        await loadPyodide_();
+        if (!pyodide) return { text: '', error: 'Python is still loading. Please wait and try again.' };
+    }
+    try {
+        // Capture stdout
+        pyodide.runPython(`
+import sys, io
+__stdout_capture = io.StringIO()
+sys.stdout = __stdout_capture
+`);
+        pyodide.runPython(code);
+        const output = pyodide.runPython('__stdout_capture.getvalue()');
+        // Reset stdout
+        pyodide.runPython('sys.stdout = sys.__stdout__');
+        return { text: output.replace(/\n$/, ''), error: null };
+    } catch(e) {
+        try { pyodide.runPython('sys.stdout = sys.__stdout__'); } catch(_) {}
+        let msg = e.message || e.toString();
+        // Clean up pyodide error messages
+        const lines = msg.split('\n');
+        const lastLine = lines[lines.length - 1] || msg;
+        return { text: '', error: lastLine };
     }
 }
 
@@ -1304,83 +1719,91 @@ function showResult(passed, item, isChallenge) {
         const alreadyDone = isChallenge
             ? state.completedChallenges.includes(item.id)
             : state.completedLessons.includes(item.id);
-
         const xpGained = alreadyDone ? 0 : item.xp;
-
         document.getElementById('resultDetail').textContent = alreadyDone
             ? 'Already completed — no extra XP'
             : `+${xpGained} XP earned!`;
-
         if (!alreadyDone) {
             if (isChallenge) state.completedChallenges.push(item.id);
             else state.completedLessons.push(item.id);
             addXP(xpGained);
             state.streak++;
-
-            // Check if hint was used
             if (!state.hintsUsed[item.id]) state.noHintCount++;
-
             checkAchievements();
         }
-
         document.getElementById('nextBtn').style.display = isChallenge ? 'none' : 'inline-flex';
     } else {
         state.streak = 0;
-        document.getElementById('resultDetail').textContent = 'Check your code and try again. Use Hint if you\'re stuck!';
+        document.getElementById('resultDetail').textContent = "Check your code and try again. Use Hint if you're stuck!";
         document.getElementById('nextBtn').style.display = 'none';
     }
-
     updateTopBar();
     renderSidebar();
     saveState();
 }
 
 function nextLesson() {
-    if (state.currentLesson < lessons.length - 1) {
-        loadLesson(state.currentLesson + 1);
-    }
+    const lessons_ = getLessons();
+    if (state.currentLesson < lessons_.length - 1) loadLesson(state.currentLesson + 1);
 }
 
 function resetCode() {
+    const challenges_ = getChallenges();
+    const lessons_ = getLessons();
     if (state.currentTab === 'challenges' && state.currentChallenge !== null) {
-        document.getElementById('codeInput').value = challenges[state.currentChallenge].starter;
+        document.getElementById('codeInput').value = challenges_[state.currentChallenge].starter;
     } else {
-        document.getElementById('codeInput').value = lessons[state.currentLesson].starter;
+        document.getElementById('codeInput').value = lessons_[state.currentLesson].starter;
     }
     document.getElementById('outputContent').textContent = '';
     document.getElementById('resultBanner').className = 'result-banner';
 }
 
 function showHint() {
+    const challenges_ = getChallenges();
+    const lessons_ = getLessons();
     let item;
     if (state.currentTab === 'challenges' && state.currentChallenge !== null) {
-        item = challenges[state.currentChallenge];
+        item = challenges_[state.currentChallenge];
     } else {
-        item = lessons[state.currentLesson];
+        item = lessons_[state.currentLesson];
     }
     state.hintsUsed[item.id] = true;
     saveState();
-
-    const outputEl = document.getElementById('outputContent');
-    outputEl.innerHTML = `<span class="success">💡 Hint:\n\n${item.hint.replace(/</g, '&lt;')}</span>`;
+    document.getElementById('outputContent').innerHTML = `<span class="success">💡 Hint:\n\n${escapeHtml(item.hint)}</span>`;
 }
 
 // ==================== ACHIEVEMENTS ====================
 
 function checkAchievements() {
+    const lessons_ = getLessons();
+    const challenges_ = getChallenges();
+    const completedLessonCount = state.completedLessons.length;
+    const completedChallengeCount = state.completedChallenges.length;
+
+    // Check bilingual
+    const jsCompleted = state.completedLessons.filter(id => id.startsWith('js_'));
+    const pyCompleted = state.completedLessons.filter(id => id.startsWith('py_'));
+    const isBilingual = jsCompleted.length > 0 && pyCompleted.length > 0;
+
     const checks = {
-        first_code: () => state.completedLessons.length >= 1,
-        three_lessons: () => state.completedLessons.length >= 3,
-        five_lessons: () => state.completedLessons.length >= 5,
-        all_lessons: () => state.completedLessons.length >= lessons.length,
-        first_challenge: () => state.completedChallenges.length >= 1,
-        three_challenges: () => state.completedChallenges.length >= 3,
-        all_challenges: () => state.completedChallenges.length >= challenges.length,
+        first_code: () => completedLessonCount >= 1,
+        three_lessons: () => completedLessonCount >= 3,
+        five_lessons: () => completedLessonCount >= 5,
+        all_lessons: () => jsCompleted.length >= jsLessons.length || pyCompleted.length >= pythonLessons.length,
+        first_challenge: () => completedChallengeCount >= 1,
+        three_challenges: () => completedChallengeCount >= 3,
+        all_challenges: () => {
+            const jsDone = state.completedChallenges.filter(id => id.startsWith('jsc_')).length >= jsChallenges.length;
+            const pyDone = state.completedChallenges.filter(id => id.startsWith('pyc_')).length >= pythonChallenges.length;
+            return jsDone || pyDone;
+        },
         streak_3: () => state.streak >= 3,
         streak_5: () => state.streak >= 5,
         no_hints: () => state.noHintCount >= 3,
-        speed_demon: () => (Date.now() - lessonStartTime) < 30000 && state.completedLessons.length > 0,
-        boss_slayer: () => state.completedLessons.includes('final_boss'),
+        speed_demon: () => (Date.now() - lessonStartTime) < 30000 && completedLessonCount > 0,
+        boss_slayer: () => state.completedLessons.includes('js_fizzbuzz') || state.completedLessons.includes('py_fizzbuzz'),
+        bilingual: () => isBilingual,
     };
 
     for (const a of achievements) {
@@ -1394,7 +1817,6 @@ function unlockAchievement(a) {
     state.unlockedAchievements.push(a.id);
     addXP(a.xp);
     saveState();
-
     document.getElementById('popupIcon').textContent = a.icon;
     document.getElementById('popupName').textContent = a.name;
     document.getElementById('popupDesc').textContent = a.desc;
@@ -1410,7 +1832,7 @@ function closeAchievement() {
     renderSidebar();
 }
 
-// ==================== TAB KEY IN EDITOR ====================
+// ==================== EDITOR TAB KEY ====================
 
 document.getElementById('codeInput').addEventListener('keydown', function(e) {
     if (e.key === 'Tab') {
@@ -1424,9 +1846,12 @@ document.getElementById('codeInput').addEventListener('keydown', function(e) {
 
 // ==================== INIT ====================
 
-updateTopBar();
-switchTab(state.currentTab);
-if (state.currentTab === 'lessons') loadLesson(state.currentLesson);
+// If no firebase or guest, show app directly
+if (!firebaseReady) {
+    isGuest = true;
+    document.getElementById('userEmail').textContent = 'Offline';
+    enterApp();
+}
 </script>
 </body>
 </html>

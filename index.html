@@ -936,7 +936,21 @@ function enterApp() {
 async function saveToCloud() {
     if (!firebaseReady || !currentUser || isGuest) return;
     try {
-        await db.collection('codequest').doc(currentUser.uid).set(state);
+        // Only save serializable data (no functions)
+        const saveData = {
+            xp: state.xp,
+            level: state.level,
+            completedLessons: state.completedLessons,
+            completedChallenges: state.completedChallenges,
+            unlockedAchievements: state.unlockedAchievements,
+            streak: state.streak,
+            noHintCount: state.noHintCount,
+            currentTab: state.currentTab,
+            currentLesson: state.currentLesson,
+            currentChallenge: state.currentChallenge,
+            hintsUsed: state.hintsUsed
+        };
+        await db.collection('codequest').doc(currentUser.uid).set(saveData);
     } catch(e) {
         console.warn('Cloud save failed:', e);
     }
@@ -949,9 +963,13 @@ async function loadCloudState() {
         if (doc.exists) {
             const cloud = doc.data();
             state = { ...defaultState(), ...cloud };
+            // Also save to localStorage as backup
+            localStorage.setItem('codequest_state', JSON.stringify(state));
         }
     } catch(e) {
         console.warn('Cloud load failed:', e);
+        // Fall back to localStorage
+        state = loadState();
     }
 }
 

@@ -1218,6 +1218,512 @@ console.log(player.name)  // "Dylan"</code></pre>
         starter: '// FizzBuzz: Print 1 to 15 with the rules above\n',
         hint: 'Use a for loop 1-15. Inside, use if/else if/else. Important: check the "both" case FIRST, because a number divisible by both would also match the individual checks!',
         check(output) { return output.trim() === '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz'; }
+    },
+    // ===== Unit 8: String Mastery =====
+    {
+        id: 'js_s8_1', chapter: 'Chapter 8: String Mastery', title: 'String Length', xp: 30,
+        body: `<p>Every string has a <span class="highlight">.length</span> property that tells you how many characters it contains.</p>
+            <pre><code>let word = "hello";
+console.log(word.length); // 5</code></pre>
+            <p><strong>Your task:</strong> Find and print the length of <code>"JavaScript"</code>.</p>`,
+        starter: '// Print the length of "JavaScript"\n',
+        hint: 'Store the string in a variable (or use it directly) and access .length on it.',
+        check(output) { return output.trim() === '10'; }
+    },
+    {
+        id: 'js_s8_2', chapter: 'Chapter 8: String Mastery', title: 'Uppercase & Lowercase', xp: 30,
+        body: `<p>Use <span class="highlight">.toUpperCase()</span> and <span class="highlight">.toLowerCase()</span> to change case.</p>
+            <pre><code>console.log("Hi".toUpperCase()); // "HI"</code></pre>
+            <p><strong>Your task:</strong> Convert <code>"hello world"</code> to uppercase and print it.</p>`,
+        starter: '// Convert "hello world" to uppercase\n',
+        hint: 'Call the method that makes everything capital letters on your string.',
+        check(output) { return output.trim() === 'HELLO WORLD'; }
+    },
+    {
+        id: 'js_s8_3', chapter: 'Chapter 8: String Mastery', title: 'Finding Characters', xp: 30,
+        body: `<p><span class="highlight">.indexOf()</span> returns the position of the first match, or -1 if not found.</p>
+            <pre><code>console.log("abcde".indexOf("c")); // 2</code></pre>
+            <p><strong>Your task:</strong> Find the index of <code>"o"</code> in <code>"hello world"</code> and print it.</p>`,
+        starter: '// Find the index of "o" in "hello world"\n',
+        hint: 'Remember: positions start at 0. Use indexOf with the character you want to find.',
+        check(output) { return output.trim() === '4'; }
+    },
+    {
+        id: 'js_s8_4', chapter: 'Chapter 8: String Mastery', title: 'Slicing Strings', xp: 32,
+        body: `<p><span class="highlight">.slice(start, end)</span> extracts part of a string. The end index is not included.</p>
+            <pre><code>console.log("abcdef".slice(1, 4)); // "bcd"</code></pre>
+            <p><strong>Your task:</strong> Extract <code>"world"</code> from <code>"hello world"</code> using slice and print it.</p>`,
+        starter: '// Extract "world" from "hello world"\n',
+        hint: 'Count the character positions. Where does "world" start? Where does it end?',
+        check(output) { return output.trim() === 'world'; }
+    },
+    {
+        id: 'js_s8_5', chapter: 'Chapter 8: String Mastery', title: 'Replacing Text', xp: 33,
+        body: `<p><span class="highlight">.replace(old, new)</span> swaps the first match.</p>
+            <pre><code>console.log("hi there".replace("hi", "hey")); // "hey there"</code></pre>
+            <p><strong>Your task:</strong> Replace <code>"world"</code> with <code>"there"</code> in <code>"hello world"</code> and print it.</p>`,
+        starter: '// Replace "world" with "there"\n',
+        hint: 'Call .replace() with two arguments: what to find and what to put in its place.',
+        check(output) { return output.trim() === 'hello there'; }
+    },
+    {
+        id: 'js_s8_6', chapter: 'Chapter 8: String Mastery', title: 'Checking Start/End', xp: 34,
+        body: `<p><span class="highlight">.startsWith()</span> and <span class="highlight">.endsWith()</span> return true/false.</p>
+            <pre><code>console.log("apple".startsWith("app")); // true</code></pre>
+            <p><strong>Your task:</strong> Check if <code>"hello world"</code> starts with <code>"hello"</code> and print the result.</p>`,
+        starter: '// Check if "hello world" starts with "hello"\n',
+        hint: 'Use the method that checks the beginning of a string. It returns a boolean.',
+        check(output) { return output.trim() === 'true'; }
+    },
+    {
+        id: 'js_s8_7', chapter: 'Chapter 8: String Mastery', title: 'Splitting Strings', xp: 35,
+        body: `<p><span class="highlight">.split(separator)</span> breaks a string into an array.</p>
+            <pre><code>let parts = "a-b-c".split("-");
+console.log(parts[0]); // "a"</code></pre>
+            <p><strong>Your task:</strong> Split <code>"red,green,blue"</code> by comma and print the second item.</p>`,
+        starter: '// Split "red,green,blue" and print the second item\n',
+        hint: 'After splitting, you get an array. The second item is at index 1.',
+        check(output) { return output.trim() === 'green'; }
+    },
+    {
+        id: 'js_s8_8', chapter: 'Chapter 8: String Mastery', title: 'Trimming Whitespace', xp: 36,
+        body: `<p><span class="highlight">.trim()</span> removes spaces from both ends of a string.</p>
+            <pre><code>console.log("  hi  ".trim()); // "hi"</code></pre>
+            <p><strong>Your task:</strong> Trim <code>"  hello  "</code> and print the result.</p>`,
+        starter: '// Trim the whitespace from "  hello  "\n',
+        hint: 'Just call the method that removes leading and trailing spaces.',
+        check(output) { return output.trim() === 'hello'; }
+    },
+    {
+        id: 'js_s8_9', chapter: 'Chapter 8: String Mastery', title: 'Template Literals', xp: 38,
+        body: `<p><span class="highlight">Template literals</span> use backticks and <code>\${}</code> to embed values.</p>
+            <pre><code>let name = "Dylan";
+console.log(\`Hello, \${name}!\`); // "Hello, Dylan!"</code></pre>
+            <p><strong>Your task:</strong> Create <code>age = 15</code>, then use a template literal to print <code>I am 15 years old</code>.</p>`,
+        starter: '// Use a template literal with age = 15\n',
+        hint: 'Use backticks (`) instead of quotes, and put your variable inside ${ }.',
+        check(output) { return output.trim() === 'I am 15 years old'; }
+    },
+    {
+        id: 'js_s8_10', chapter: 'Chapter 8: String Mastery', title: 'String Repeat', xp: 40,
+        body: `<p><span class="highlight">.repeat(n)</span> repeats a string n times.</p>
+            <pre><code>console.log("ab".repeat(2)); // "abab"</code></pre>
+            <p><strong>Your task:</strong> Print <code>"ha"</code> repeated 3 times (<code>hahaha</code>).</p>`,
+        starter: '// Print "ha" repeated 3 times\n',
+        hint: 'Call .repeat() with the number of repetitions you want.',
+        check(output) { return output.trim() === 'hahaha'; }
+    },
+    // ===== Unit 9: Array Power =====
+    {
+        id: 'js_s9_1', chapter: 'Chapter 9: Array Power', title: 'Adding Items', xp: 35,
+        body: `<p><span class="highlight">.push()</span> adds an item to the end of an array.</p>
+            <pre><code>let arr = [1, 2];
+arr.push(3);
+console.log(arr); // [1, 2, 3]</code></pre>
+            <p><strong>Your task:</strong> Create <code>[1, 2, 3]</code>, add <code>4</code> to the end, and print the array.</p>`,
+        starter: '// Create [1,2,3], add 4, print it\n',
+        hint: 'After pushing, just console.log the whole array.',
+        check(output) { let s = output.trim(); return s.includes('1') && s.includes('2') && s.includes('3') && s.includes('4'); }
+    },
+    {
+        id: 'js_s9_2', chapter: 'Chapter 9: Array Power', title: 'Removing Last Item', xp: 36,
+        body: `<p><span class="highlight">.pop()</span> removes and returns the last item.</p>
+            <pre><code>let arr = [1, 2, 3];
+let last = arr.pop(); // 3</code></pre>
+            <p><strong>Your task:</strong> Create <code>[1, 2, 3]</code>, remove the last item, and print what was removed.</p>`,
+        starter: '// Remove the last item from [1,2,3] and print it\n',
+        hint: 'pop() gives you back the item it removed. Store it or print it directly.',
+        check(output) { return output.trim() === '3'; }
+    },
+    {
+        id: 'js_s9_3', chapter: 'Chapter 9: Array Power', title: 'Finding Items', xp: 37,
+        body: `<p><span class="highlight">.indexOf()</span> returns the position of an item in an array.</p>
+            <pre><code>let fruits = ["apple", "banana"];
+console.log(fruits.indexOf("banana")); // 1</code></pre>
+            <p><strong>Your task:</strong> Find the index of <code>"banana"</code> in <code>["apple", "banana", "cherry"]</code> and print it.</p>`,
+        starter: '// Find the index of "banana"\n',
+        hint: 'It works just like string indexOf but on arrays.',
+        check(output) { return output.trim() === '1'; }
+    },
+    {
+        id: 'js_s9_4', chapter: 'Chapter 9: Array Power', title: 'Includes Check', xp: 38,
+        body: `<p><span class="highlight">.includes()</span> checks if an array contains a value.</p>
+            <pre><code>console.log([1, 2, 3].includes(2)); // true</code></pre>
+            <p><strong>Your task:</strong> Check if <code>[1, 2, 3, 4, 5]</code> contains <code>3</code> and print the result.</p>`,
+        starter: '// Check if the array contains 3\n',
+        hint: 'Call .includes() with the value you are looking for.',
+        check(output) { return output.trim() === 'true'; }
+    },
+    {
+        id: 'js_s9_5', chapter: 'Chapter 9: Array Power', title: 'Sorting', xp: 40,
+        body: `<p><span class="highlight">.sort()</span> sorts an array. For numbers, pass a compare function.</p>
+            <pre><code>let nums = [3, 1, 2];
+nums.sort((a, b) => a - b);
+console.log(nums); // [1, 2, 3]</code></pre>
+            <p><strong>Your task:</strong> Sort <code>[3, 1, 4, 1, 5, 9]</code> in ascending order and print it.</p>`,
+        starter: '// Sort [3,1,4,1,5,9] and print\n',
+        hint: 'Without a compare function, sort treats items as strings. Use (a, b) => a - b for numbers.',
+        check(output) { let s = output.trim(); return s.includes('1') && s.includes('3') && s.includes('4') && s.includes('5') && s.includes('9') && (s.indexOf('1') < s.indexOf('3')) && (s.indexOf('3') < s.indexOf('4')); }
+    },
+    {
+        id: 'js_s9_6', chapter: 'Chapter 9: Array Power', title: 'Reversing', xp: 38,
+        body: `<p><span class="highlight">.reverse()</span> reverses an array in place.</p>
+            <pre><code>let arr = [1, 2, 3];
+arr.reverse();
+console.log(arr); // [3, 2, 1]</code></pre>
+            <p><strong>Your task:</strong> Reverse <code>[1, 2, 3, 4, 5]</code> and print it.</p>`,
+        starter: '// Reverse [1,2,3,4,5] and print\n',
+        hint: 'Just call the method that flips the order, then print.',
+        check(output) { let s = output.trim(); return s.indexOf('5') < s.indexOf('4') && s.indexOf('4') < s.indexOf('3'); }
+    },
+    {
+        id: 'js_s9_7', chapter: 'Chapter 9: Array Power', title: 'Filtering', xp: 42,
+        body: `<p><span class="highlight">.filter()</span> creates a new array with items that pass a test.</p>
+            <pre><code>let big = [1, 5, 10].filter(n => n > 3);
+console.log(big); // [5, 10]</code></pre>
+            <p><strong>Your task:</strong> From <code>[1,2,3,4,5,6,7,8,9,10]</code>, print only numbers greater than 5, each on its own line.</p>`,
+        starter: '// Print numbers > 5 from the array\n',
+        hint: 'Filter the array, then loop through the result and print each one.',
+        check(output) { return output.trim() === '6\n7\n8\n9\n10'; }
+    },
+    {
+        id: 'js_s9_8', chapter: 'Chapter 9: Array Power', title: 'Mapping', xp: 43,
+        body: `<p><span class="highlight">.map()</span> creates a new array by transforming each item.</p>
+            <pre><code>let doubled = [1, 2, 3].map(n => n * 2);
+console.log(doubled); // [2, 4, 6]</code></pre>
+            <p><strong>Your task:</strong> From <code>[1, 2, 3, 4, 5]</code>, create a new array with each number doubled and print it.</p>`,
+        starter: '// Double each number in [1,2,3,4,5]\n',
+        hint: 'Use .map() with a function that multiplies each element by 2.',
+        check(output) { let s = output.trim(); return s.includes('2') && s.includes('4') && s.includes('6') && s.includes('8') && s.includes('10'); }
+    },
+    {
+        id: 'js_s9_9', chapter: 'Chapter 9: Array Power', title: 'Joining', xp: 40,
+        body: `<p><span class="highlight">.join(separator)</span> combines array items into a string.</p>
+            <pre><code>console.log(["a", "b", "c"].join("-")); // "a-b-c"</code></pre>
+            <p><strong>Your task:</strong> Join <code>["hello", "world"]</code> with a space and print it.</p>`,
+        starter: '// Join ["hello", "world"] with a space\n',
+        hint: 'Pass a space character as the separator to .join().',
+        check(output) { return output.trim() === 'hello world'; }
+    },
+    {
+        id: 'js_s9_10', chapter: 'Chapter 9: Array Power', title: 'Length & Empty Check', xp: 45,
+        body: `<p>Arrays have a <span class="highlight">.length</span> property, just like strings.</p>
+            <pre><code>let arr = [1, 2, 3];
+console.log(arr.length); // 3</code></pre>
+            <p><strong>Your task:</strong> Create an empty array and print its length.</p>`,
+        starter: '// Create an empty array, print its length\n',
+        hint: 'An empty array is just []. What is its .length?',
+        check(output) { return output.trim() === '0'; }
+    },
+    // ===== Unit 10: Logic & Problem Solving =====
+    {
+        id: 'js_s10_1', chapter: 'Chapter 10: Logic & Problem Solving', title: 'AND Operator', xp: 40,
+        body: `<p>The <span class="highlight">&&</span> (AND) operator returns true only if both sides are true.</p>
+            <pre><code>console.log(5 > 3 && 10 > 7); // true</code></pre>
+            <p><strong>Your task:</strong> Check if <code>15 > 10</code> AND <code>15 < 20</code>, and print the result.</p>`,
+        starter: '// Check if 15 > 10 AND 15 < 20\n',
+        hint: 'Put both conditions on either side of && and print the whole expression.',
+        check(output) { return output.trim() === 'true'; }
+    },
+    {
+        id: 'js_s10_2', chapter: 'Chapter 10: Logic & Problem Solving', title: 'OR Operator', xp: 40,
+        body: `<p>The <span class="highlight">||</span> (OR) operator returns true if at least one side is true.</p>
+            <pre><code>console.log(1 > 10 || 1 < 5); // true</code></pre>
+            <p><strong>Your task:</strong> Check if <code>5 > 10</code> OR <code>5 < 20</code>, and print the result.</p>`,
+        starter: '// Check if 5 > 10 OR 5 < 20\n',
+        hint: 'Use || between the two conditions.',
+        check(output) { return output.trim() === 'true'; }
+    },
+    {
+        id: 'js_s10_3', chapter: 'Chapter 10: Logic & Problem Solving', title: 'NOT Operator', xp: 40,
+        body: `<p>The <span class="highlight">!</span> (NOT) operator flips true to false and vice versa.</p>
+            <pre><code>console.log(!true);  // false
+console.log(!false); // true</code></pre>
+            <p><strong>Your task:</strong> Print the opposite of <code>false</code>.</p>`,
+        starter: '// Print the opposite of false\n',
+        hint: 'Put the NOT operator in front of the boolean value.',
+        check(output) { return output.trim() === 'true'; }
+    },
+    {
+        id: 'js_s10_4', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Nested If', xp: 42,
+        body: `<p>You can combine conditions to check ranges.</p>
+            <pre><code>let temp = 72;
+if (temp >= 60 && temp <= 80) {
+    console.log("nice weather");
+}</code></pre>
+            <p><strong>Your task:</strong> Given <code>age = 15</code>, if age is between 13 and 17 (inclusive), print <code>teenager</code>.</p>`,
+        starter: 'let age = 15;\n// Check if age is between 13 and 17\n',
+        hint: 'Use && to combine two comparisons: one for the lower bound and one for the upper bound.',
+        check(output) { return output.trim() === 'teenager'; }
+    },
+    {
+        id: 'js_s10_5', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Counting in Loops', xp: 44,
+        body: `<p>Use a <span class="highlight">counter variable</span> to count things inside a loop.</p>
+            <pre><code>let count = 0;
+for (let i = 1; i <= 10; i++) {
+    if (i % 2 === 0) count++;
+}</code></pre>
+            <p><strong>Your task:</strong> Count how many even numbers are between 1 and 20. Print the count.</p>`,
+        starter: '// Count even numbers from 1 to 20\n',
+        hint: 'Start a counter at 0, loop 1-20, increment counter when the number is even.',
+        check(output) { return output.trim() === '10'; }
+    },
+    {
+        id: 'js_s10_6', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Sum of Evens', xp: 45,
+        body: `<p>Combine a loop with a condition to sum specific numbers.</p>
+            <pre><code>let total = 0;
+for (let i = 1; i <= 10; i++) {
+    if (i % 2 === 0) total += i;
+}</code></pre>
+            <p><strong>Your task:</strong> Sum all even numbers from 1 to 20 and print the result.</p>`,
+        starter: '// Sum even numbers from 1 to 20\n',
+        hint: 'Like counting, but add the number itself to the total instead of adding 1.',
+        check(output) { return output.trim() === '110'; }
+    },
+    {
+        id: 'js_s10_7', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Find First Match', xp: 46,
+        body: `<p>Use <span class="highlight">break</span> to stop a loop once you find what you need.</p>
+            <pre><code>for (let i = 1; i <= 100; i++) {
+    if (i % 13 === 0) { console.log(i); break; }
+}</code></pre>
+            <p><strong>Your task:</strong> Find the first number divisible by 7 in the range 1-50 and print it.</p>`,
+        starter: '// Find first number divisible by 7\n',
+        hint: 'Loop from 1, check divisibility with %, and stop as soon as you find one.',
+        check(output) { return output.trim() === '7'; }
+    },
+    {
+        id: 'js_s10_8', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Swap Variables', xp: 45,
+        body: `<p>To swap two variables, you need a <span class="highlight">temporary variable</span> (or destructuring).</p>
+            <pre><code>let x = 1, y = 2;
+[x, y] = [y, x]; // neat JS trick!</code></pre>
+            <p><strong>Your task:</strong> Start with <code>a = 1</code> and <code>b = 2</code>. Swap them, then print <code>a</code> and <code>b</code> on separate lines.</p>`,
+        starter: 'let a = 1;\nlet b = 2;\n// Swap a and b, then print both\n',
+        hint: 'You can use a temp variable, or the destructuring trick shown above.',
+        check(output) { return output.trim() === '2\n1'; }
+    },
+    {
+        id: 'js_s10_9', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Min Without Built-in', xp: 48,
+        body: `<p>Find the minimum by tracking the smallest value seen so far.</p>
+            <pre><code>let min = arr[0];
+for (let n of arr) {
+    if (n < min) min = n;
+}</code></pre>
+            <p><strong>Your task:</strong> Find the smallest number in <code>[5, 2, 8, 1, 9]</code> without using <code>Math.min</code>. Print it.</p>`,
+        starter: 'let arr = [5, 2, 8, 1, 9];\n// Find the min without Math.min\n',
+        hint: 'Start with the first element as your "current minimum" and loop through comparing.',
+        check(output) { return output.trim() === '1'; }
+    },
+    {
+        id: 'js_s10_10', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Multiplication Table', xp: 50,
+        body: `<p>Use a loop to build a times table.</p>
+            <pre><code>for (let i = 1; i <= 3; i++) {
+    console.log("2 x " + i + " = " + (2*i));
+}</code></pre>
+            <p><strong>Your task:</strong> Print the 5 times table from 5x1 to 5x5 in the format <code>5 x 1 = 5</code>.</p>`,
+        starter: '// Print 5 times table (5x1 through 5x5)\n',
+        hint: 'Loop from 1 to 5 and use string concatenation or a template literal for the output.',
+        check(output) { return output.trim() === '5 x 1 = 5\n5 x 2 = 10\n5 x 3 = 15\n5 x 4 = 20\n5 x 5 = 25'; }
+    },
+    // ===== Unit 11: Building Things =====
+    {
+        id: 'js_s11_1', chapter: 'Chapter 11: Building Things', title: 'Simple Calculator', xp: 45,
+        body: `<p>Functions can use <span class="highlight">if/else</span> to handle different operations.</p>
+            <pre><code>function greet(lang) {
+    if (lang === "en") return "Hello";
+    else return "Hola";
+}</code></pre>
+            <p><strong>Your task:</strong> Create <code>calc(a, op, b)</code> that handles <code>"+", "-", "*", "/"</code>. Print <code>calc(10, "+", 5)</code>.</p>`,
+        starter: '// Create calc(a, op, b) function\n',
+        hint: 'Use if/else if to check what op is, and return the corresponding math result.',
+        check(output) { return output.trim() === '15'; }
+    },
+    {
+        id: 'js_s11_2', chapter: 'Chapter 11: Building Things', title: 'Temperature Converter', xp: 46,
+        body: `<p>The formula to convert Celsius to Fahrenheit: <span class="highlight">F = C * 9/5 + 32</span></p>
+            <p><strong>Your task:</strong> Create <code>toFahrenheit(c)</code> that returns the Fahrenheit value. Print <code>toFahrenheit(0)</code>.</p>`,
+        starter: '// Create toFahrenheit(c) function\n',
+        hint: 'Just apply the formula inside the function and return the result.',
+        check(output) { return output.trim() === '32'; }
+    },
+    {
+        id: 'js_s11_3', chapter: 'Chapter 11: Building Things', title: 'Tip Calculator', xp: 47,
+        body: `<p>Calculate a tip as a percentage of the bill.</p>
+            <pre><code>// 20% of 50 = 50 * 20 / 100 = 10</code></pre>
+            <p><strong>Your task:</strong> Create <code>tip(bill, percent)</code> that returns the tip amount. Print <code>tip(50, 20)</code>.</p>`,
+        starter: '// Create tip(bill, percent) function\n',
+        hint: 'Multiply the bill by the percent and divide by 100.',
+        check(output) { return output.trim() === '10'; }
+    },
+    {
+        id: 'js_s11_4', chapter: 'Chapter 11: Building Things', title: 'Word Counter', xp: 48,
+        body: `<p>You can count words by <span class="highlight">splitting</span> a string on spaces.</p>
+            <pre><code>"a b c".split(" ").length // 3</code></pre>
+            <p><strong>Your task:</strong> Count the words in <code>"the quick brown fox"</code> and print the count.</p>`,
+        starter: '// Count the words in "the quick brown fox"\n',
+        hint: 'Split the string by spaces, then check the length of the resulting array.',
+        check(output) { return output.trim() === '4'; }
+    },
+    {
+        id: 'js_s11_5', chapter: 'Chapter 11: Building Things', title: 'Vowel Counter', xp: 50,
+        body: `<p>Loop through each character and check if it is a <span class="highlight">vowel</span> (a, e, i, o, u).</p>
+            <p><strong>Your task:</strong> Count the vowels in <code>"hello world"</code> and print the count.</p>`,
+        starter: '// Count vowels in "hello world"\n',
+        hint: 'Loop through each character. Check if it is in "aeiou". Keep a counter.',
+        check(output) { return output.trim() === '3'; }
+    },
+    {
+        id: 'js_s11_6', chapter: 'Chapter 11: Building Things', title: 'Reverse Number', xp: 50,
+        body: `<p>Convert a number to a string, reverse it, and print.</p>
+            <pre><code>String(123).split("").reverse().join("") // "321"</code></pre>
+            <p><strong>Your task:</strong> Reverse the number <code>12345</code> and print the result.</p>`,
+        starter: '// Reverse the number 12345\n',
+        hint: 'Turn it into a string, split into characters, reverse the array, join back together.',
+        check(output) { return output.trim() === '54321'; }
+    },
+    {
+        id: 'js_s11_7', chapter: 'Chapter 11: Building Things', title: 'Palindrome Function', xp: 52,
+        body: `<p>A <span class="highlight">palindrome</span> reads the same forwards and backwards (e.g. "racecar").</p>
+            <p><strong>Your task:</strong> Create <code>isPalindrome(word)</code> that returns true/false. Print <code>isPalindrome("racecar")</code>.</p>`,
+        starter: '// Create isPalindrome(word) function\n',
+        hint: 'Reverse the word and compare it to the original.',
+        check(output) { return output.trim() === 'true'; }
+    },
+    {
+        id: 'js_s11_8', chapter: 'Chapter 11: Building Things', title: 'Title Case', xp: 52,
+        body: `<p><span class="highlight">Title Case</span> capitalizes the first letter of every word.</p>
+            <pre><code>"hello"[0].toUpperCase() + "hello".slice(1) // "Hello"</code></pre>
+            <p><strong>Your task:</strong> Convert <code>"hello world"</code> to <code>"Hello World"</code> and print it.</p>`,
+        starter: '// Convert "hello world" to title case\n',
+        hint: 'Split into words, capitalize the first letter of each, then join back with a space.',
+        check(output) { return output.trim() === 'Hello World'; }
+    },
+    {
+        id: 'js_s11_9', chapter: 'Chapter 11: Building Things', title: 'Remove Duplicates', xp: 53,
+        body: `<p>A <span class="highlight">Set</span> automatically removes duplicate values.</p>
+            <pre><code>let unique = [...new Set([1, 1, 2])]; // [1, 2]</code></pre>
+            <p><strong>Your task:</strong> Remove duplicates from <code>[1, 2, 2, 3, 3, 3, 4]</code> and print the unique values.</p>`,
+        starter: '// Remove duplicates from the array\n',
+        hint: 'Wrap the array in new Set() and spread it back into an array.',
+        check(output) { let s = output.trim(); return s.includes('1') && s.includes('2') && s.includes('3') && s.includes('4') && !s.includes('3,3'); }
+    },
+    {
+        id: 'js_s11_10', chapter: 'Chapter 11: Building Things', title: 'Caesar Cipher', xp: 55,
+        body: `<p>A <span class="highlight">Caesar cipher</span> shifts each letter forward in the alphabet.</p>
+            <pre><code>String.fromCharCode("a".charCodeAt(0) + 1) // "b"</code></pre>
+            <p><strong>Your task:</strong> Shift each letter in <code>"abc"</code> forward by 1 to get <code>"bcd"</code> and print it.</p>`,
+        starter: '// Shift "abc" forward by 1\n',
+        hint: 'Loop through each character, get its char code, add 1, convert back to a character.',
+        check(output) { return output.trim() === 'bcd'; }
+    },
+    // ===== Unit 12: Level Up =====
+    {
+        id: 'js_s12_1', chapter: 'Chapter 12: Level Up', title: 'Scope', xp: 50,
+        body: `<p>Variables declared inside a function are <span class="highlight">local</span> — they don't exist outside.</p>
+            <pre><code>function test() { let x = 10; }
+// x is not available here</code></pre>
+            <p><strong>Your task:</strong> Create a function that prints <code>inside</code>. Call it, then print <code>outside</code> after.</p>`,
+        starter: '// Show scope: print "inside" from a function, then "outside" after\n',
+        hint: 'Define a function with console.log("inside"), call it, then console.log("outside").',
+        check(output) { return output.trim() === 'inside\noutside'; }
+    },
+    {
+        id: 'js_s12_2', chapter: 'Chapter 12: Level Up', title: 'Default Parameters', xp: 52,
+        body: `<p><span class="highlight">Default parameters</span> provide a fallback value when no argument is passed.</p>
+            <pre><code>function greet(name = "World") {
+    console.log("Hello, " + name);
+}</code></pre>
+            <p><strong>Your task:</strong> Create <code>greet(name = "World")</code> that prints <code>"Hello, " + name</code>. Call it with no arguments.</p>`,
+        starter: '// Create greet with default parameter\n',
+        hint: 'Put the default value right in the parameter list using =.',
+        check(output) { return output.trim() === 'Hello, World'; }
+    },
+    {
+        id: 'js_s12_3', chapter: 'Chapter 12: Level Up', title: 'Multiple Return Values', xp: 54,
+        body: `<p>Return an array to send back <span class="highlight">multiple values</span> from a function.</p>
+            <pre><code>function minMax(arr) {
+    return [Math.min(...arr), Math.max(...arr)];
+}</code></pre>
+            <p><strong>Your task:</strong> Create <code>minMax(arr)</code> returning <code>[min, max]</code> of <code>[3,1,4,1,5]</code>. Print both on separate lines.</p>`,
+        starter: '// Create minMax function\n',
+        hint: 'Return an array of two values. Then destructure or index into the result to print each.',
+        check(output) { return output.trim() === '1\n5'; }
+    },
+    {
+        id: 'js_s12_4', chapter: 'Chapter 12: Level Up', title: 'Recursion Intro', xp: 56,
+        body: `<p><span class="highlight">Recursion</span> is when a function calls itself. Always have a stopping condition!</p>
+            <pre><code>function count(n) {
+    if (n < 0) return;
+    console.log(n);
+    count(n - 1);
+}</code></pre>
+            <p><strong>Your task:</strong> Create <code>countdown(n)</code> that prints n down to 0. Call with <code>5</code>.</p>`,
+        starter: '// Create recursive countdown function\n',
+        hint: 'Print n, then call the function again with n-1. Stop when n goes below 0.',
+        check(output) { return output.trim() === '5\n4\n3\n2\n1\n0'; }
+    },
+    {
+        id: 'js_s12_5', chapter: 'Chapter 12: Level Up', title: 'Higher Order Functions', xp: 58,
+        body: `<p>Combine <span class="highlight">.filter()</span> and <span class="highlight">.map()</span> to transform data in steps.</p>
+            <pre><code>[1,2,3,4].filter(n => n > 2).map(n => n * 10) // [30, 40]</code></pre>
+            <p><strong>Your task:</strong> From <code>[1,2,3,4,5,6]</code>, get squares of even numbers. Print each on its own line.</p>`,
+        starter: '// Squares of even numbers from [1,2,3,4,5,6]\n',
+        hint: 'First filter for even numbers, then map to square each one, then print each.',
+        check(output) { return output.trim() === '4\n16\n36'; }
+    },
+    {
+        id: 'js_s12_6', chapter: 'Chapter 12: Level Up', title: 'Error Handling', xp: 55,
+        body: `<p><span class="highlight">try/catch</span> lets you handle errors gracefully instead of crashing.</p>
+            <pre><code>try {
+    JSON.parse("oops");
+} catch (e) {
+    console.log("Error caught!");
+}</code></pre>
+            <p><strong>Your task:</strong> Use try/catch to catch the error from <code>JSON.parse("bad")</code>. Print <code>caught an error!</code>.</p>`,
+        starter: '// Catch an error from JSON.parse("bad")\n',
+        hint: 'Put the risky code in try { } and your message in catch { }.',
+        check(output) { return output.trim() === 'caught an error!'; }
+    },
+    {
+        id: 'js_s12_7', chapter: 'Chapter 12: Level Up', title: 'Letter Frequency', xp: 58,
+        body: `<p>Use an <span class="highlight">object</span> to count how often each letter appears.</p>
+            <pre><code>let freq = {};
+for (let ch of "aab") {
+    freq[ch] = (freq[ch] || 0) + 1;
+} // { a: 2, b: 1 }</code></pre>
+            <p><strong>Your task:</strong> Count letter frequency in <code>"hello"</code>. Print the count of <code>"l"</code>.</p>`,
+        starter: '// Count letter frequency in "hello"\n',
+        hint: 'Build a frequency object by looping through each character, then access the key you need.',
+        check(output) { return output.trim() === '2'; }
+    },
+    {
+        id: 'js_s12_8', chapter: 'Chapter 12: Level Up', title: 'Nested Loops', xp: 56,
+        body: `<p><span class="highlight">Nested loops</span> — a loop inside a loop — are great for grids.</p>
+            <pre><code>for (let r = 0; r < 2; r++) {
+    let row = "";
+    for (let c = 0; c < 3; c++) row += "# ";
+    console.log(row.trim());
+}</code></pre>
+            <p><strong>Your task:</strong> Print a 3x3 grid of stars. Each row should be <code>* * *</code>.</p>`,
+        starter: '// Print a 3x3 grid of stars\n',
+        hint: 'Outer loop for rows, inner loop to build each row string with stars and spaces.',
+        check(output) { return output.trim() === '* * *\n* * *\n* * *'; }
+    },
+    {
+        id: 'js_s12_9', chapter: 'Chapter 12: Level Up', title: 'Sorting Objects', xp: 60,
+        body: `<p>Sort objects by passing a <span class="highlight">compare function</span> that looks at a property.</p>
+            <pre><code>arr.sort((a, b) => a.age - b.age);</code></pre>
+            <p><strong>Your task:</strong> Sort <code>[{name:"Charlie",age:30},{name:"Alice",age:25},{name:"Bob",age:35}]</code> by age. Print the first name.</p>`,
+        starter: '// Sort by age and print the youngest name\n',
+        hint: 'Use .sort() with a compare function on the age property, then access [0].name.',
+        check(output) { return output.trim() === 'Alice'; }
+    },
+    {
+        id: 'js_s12_10', chapter: 'Chapter 12: Level Up', title: 'Final Boss: Mini Game', xp: 65,
+        body: `<p>Put it all together! Simulate a simple <span class="highlight">combat system</span>.</p>
+            <p><strong>Your task:</strong> Create <code>attack(health, damage)</code> that returns new health. Starting at <code>health=100</code> and <code>damage=25</code>, call it 3 times and print health after each.</p>`,
+        starter: '// Create attack function and simulate 3 attacks\n',
+        hint: 'The function subtracts damage from health and returns the result. Call it in sequence, updating health each time.',
+        check(output) { return output.trim() === '75\n50\n25'; }
     }
 ];
 
@@ -1390,6 +1896,507 @@ print(player["name"])  # "Dylan"</code></pre>
         starter: '# FizzBuzz: Print 1 to 15 with the rules above\n',
         hint: 'Use a for loop with range. Inside, use if/elif/else. Key trick: check the "both 3 AND 5" case FIRST, before checking them individually!',
         check(output) { return output.trim() === '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz'; }
+    },
+    // ===== Unit 8: String Mastery =====
+    {
+        id: 'py_s8_1', chapter: 'Chapter 8: String Mastery', title: 'String Length', xp: 30,
+        body: `<p>Use <span class="highlight">len()</span> to find how many characters a string has.</p>
+            <pre><code>word = "hello"
+print(len(word))  # 5</code></pre>
+            <p><strong>Your task:</strong> Find and print the length of <code>"Python"</code>.</p>`,
+        starter: '# Print the length of "Python"\n',
+        hint: 'Wrap the string (or a variable holding it) inside len() and print the result.',
+        check(output) { return output.trim() === '6'; }
+    },
+    {
+        id: 'py_s8_2', chapter: 'Chapter 8: String Mastery', title: 'Uppercase & Lowercase', xp: 30,
+        body: `<p>Use <span class="highlight">.upper()</span> and <span class="highlight">.lower()</span> to change case.</p>
+            <pre><code>print("Hi".upper())  # "HI"</code></pre>
+            <p><strong>Your task:</strong> Convert <code>"hello world"</code> to uppercase and print it.</p>`,
+        starter: '# Convert "hello world" to uppercase\n',
+        hint: 'Call the method that makes everything capital letters on your string.',
+        check(output) { return output.trim() === 'HELLO WORLD'; }
+    },
+    {
+        id: 'py_s8_3', chapter: 'Chapter 8: String Mastery', title: 'Finding Characters', xp: 30,
+        body: `<p><span class="highlight">.find()</span> returns the position of the first match, or -1 if not found.</p>
+            <pre><code>print("abcde".find("c"))  # 2</code></pre>
+            <p><strong>Your task:</strong> Find the index of <code>"o"</code> in <code>"hello world"</code> and print it.</p>`,
+        starter: '# Find the index of "o" in "hello world"\n',
+        hint: 'Remember: positions start at 0. Use .find() with the character you want.',
+        check(output) { return output.trim() === '4'; }
+    },
+    {
+        id: 'py_s8_4', chapter: 'Chapter 8: String Mastery', title: 'Slicing Strings', xp: 32,
+        body: `<p>Use <span class="highlight">slicing</span> with <code>[start:end]</code> to extract part of a string. End is not included.</p>
+            <pre><code>print("abcdef"[1:4])  # "bcd"</code></pre>
+            <p><strong>Your task:</strong> Extract <code>"world"</code> from <code>"hello world"</code> using slicing and print it.</p>`,
+        starter: '# Extract "world" from "hello world"\n',
+        hint: 'Count the character positions. Where does "world" start? Where does it end?',
+        check(output) { return output.trim() === 'world'; }
+    },
+    {
+        id: 'py_s8_5', chapter: 'Chapter 8: String Mastery', title: 'Replacing Text', xp: 33,
+        body: `<p><span class="highlight">.replace(old, new)</span> swaps the first match (or all matches in Python).</p>
+            <pre><code>print("hi there".replace("hi", "hey"))  # "hey there"</code></pre>
+            <p><strong>Your task:</strong> Replace <code>"world"</code> with <code>"there"</code> in <code>"hello world"</code> and print it.</p>`,
+        starter: '# Replace "world" with "there"\n',
+        hint: 'Call .replace() with two arguments: what to find and what to put in its place.',
+        check(output) { return output.trim() === 'hello there'; }
+    },
+    {
+        id: 'py_s8_6', chapter: 'Chapter 8: String Mastery', title: 'Checking Start/End', xp: 34,
+        body: `<p><span class="highlight">.startswith()</span> and <span class="highlight">.endswith()</span> return True/False.</p>
+            <pre><code>print("apple".startswith("app"))  # True</code></pre>
+            <p><strong>Your task:</strong> Check if <code>"hello world"</code> starts with <code>"hello"</code> and print the result.</p>`,
+        starter: '# Check if "hello world" starts with "hello"\n',
+        hint: 'Use the method that checks the beginning of a string. It returns a boolean.',
+        check(output) { return output.trim() === 'True'; }
+    },
+    {
+        id: 'py_s8_7', chapter: 'Chapter 8: String Mastery', title: 'Splitting Strings', xp: 35,
+        body: `<p><span class="highlight">.split(separator)</span> breaks a string into a list.</p>
+            <pre><code>parts = "a-b-c".split("-")
+print(parts[0])  # "a"</code></pre>
+            <p><strong>Your task:</strong> Split <code>"red,green,blue"</code> by comma and print the second item.</p>`,
+        starter: '# Split "red,green,blue" and print the second item\n',
+        hint: 'After splitting, you get a list. The second item is at index 1.',
+        check(output) { return output.trim() === 'green'; }
+    },
+    {
+        id: 'py_s8_8', chapter: 'Chapter 8: String Mastery', title: 'Trimming Whitespace', xp: 36,
+        body: `<p><span class="highlight">.strip()</span> removes spaces from both ends of a string.</p>
+            <pre><code>print("  hi  ".strip())  # "hi"</code></pre>
+            <p><strong>Your task:</strong> Strip <code>"  hello  "</code> and print the result.</p>`,
+        starter: '# Strip the whitespace from "  hello  "\n',
+        hint: 'Just call the method that removes leading and trailing spaces.',
+        check(output) { return output.trim() === 'hello'; }
+    },
+    {
+        id: 'py_s8_9', chapter: 'Chapter 8: String Mastery', title: 'f-strings', xp: 38,
+        body: `<p><span class="highlight">f-strings</span> let you embed variables directly in a string with <code>f"..."</code>.</p>
+            <pre><code>name = "Dylan"
+print(f"Hello, {name}!")  # "Hello, Dylan!"</code></pre>
+            <p><strong>Your task:</strong> Create <code>age = 15</code>, then use an f-string to print <code>I am 15 years old</code>.</p>`,
+        starter: '# Use an f-string with age = 15\n',
+        hint: 'Put f before the quotes and place your variable inside { } curly braces.',
+        check(output) { return output.trim() === 'I am 15 years old'; }
+    },
+    {
+        id: 'py_s8_10', chapter: 'Chapter 8: String Mastery', title: 'String Repeat', xp: 40,
+        body: `<p>In Python, use the <span class="highlight">*</span> operator to repeat a string.</p>
+            <pre><code>print("ab" * 2)  # "abab"</code></pre>
+            <p><strong>Your task:</strong> Print <code>"ha"</code> repeated 3 times (<code>hahaha</code>).</p>`,
+        starter: '# Print "ha" repeated 3 times\n',
+        hint: 'Multiply the string by the number of repetitions.',
+        check(output) { return output.trim() === 'hahaha'; }
+    },
+    // ===== Unit 9: List Power =====
+    {
+        id: 'py_s9_1', chapter: 'Chapter 9: List Power', title: 'Adding Items', xp: 35,
+        body: `<p><span class="highlight">.append()</span> adds an item to the end of a list.</p>
+            <pre><code>arr = [1, 2]
+arr.append(3)
+print(arr)  # [1, 2, 3]</code></pre>
+            <p><strong>Your task:</strong> Create <code>[1, 2, 3]</code>, add <code>4</code> to the end, and print the list.</p>`,
+        starter: '# Create [1,2,3], add 4, print it\n',
+        hint: 'After appending, just print the whole list.',
+        check(output) { let s = output.trim(); return s.includes('1') && s.includes('2') && s.includes('3') && s.includes('4'); }
+    },
+    {
+        id: 'py_s9_2', chapter: 'Chapter 9: List Power', title: 'Removing Last Item', xp: 36,
+        body: `<p><span class="highlight">.pop()</span> removes and returns the last item.</p>
+            <pre><code>arr = [1, 2, 3]
+last = arr.pop()  # 3</code></pre>
+            <p><strong>Your task:</strong> Create <code>[1, 2, 3]</code>, remove the last item, and print what was removed.</p>`,
+        starter: '# Remove the last item from [1,2,3] and print it\n',
+        hint: 'pop() gives you back the item it removed. Store it or print it directly.',
+        check(output) { return output.trim() === '3'; }
+    },
+    {
+        id: 'py_s9_3', chapter: 'Chapter 9: List Power', title: 'Finding Items', xp: 37,
+        body: `<p><span class="highlight">.index()</span> returns the position of an item in a list.</p>
+            <pre><code>fruits = ["apple", "banana"]
+print(fruits.index("banana"))  # 1</code></pre>
+            <p><strong>Your task:</strong> Find the index of <code>"banana"</code> in <code>["apple", "banana", "cherry"]</code> and print it.</p>`,
+        starter: '# Find the index of "banana"\n',
+        hint: 'Call .index() with the value you want to locate.',
+        check(output) { return output.trim() === '1'; }
+    },
+    {
+        id: 'py_s9_4', chapter: 'Chapter 9: List Power', title: 'Contains Check', xp: 38,
+        body: `<p>Use the <span class="highlight">in</span> keyword to check if a value is in a list.</p>
+            <pre><code>print(2 in [1, 2, 3])  # True</code></pre>
+            <p><strong>Your task:</strong> Check if <code>[1, 2, 3, 4, 5]</code> contains <code>3</code> and print the result.</p>`,
+        starter: '# Check if the list contains 3\n',
+        hint: 'Use "value in list" — it returns True or False.',
+        check(output) { return output.trim() === 'True'; }
+    },
+    {
+        id: 'py_s9_5', chapter: 'Chapter 9: List Power', title: 'Sorting', xp: 40,
+        body: `<p><span class="highlight">.sort()</span> sorts a list in place, or <code>sorted()</code> returns a new sorted list.</p>
+            <pre><code>nums = [3, 1, 2]
+nums.sort()
+print(nums)  # [1, 2, 3]</code></pre>
+            <p><strong>Your task:</strong> Sort <code>[3, 1, 4, 1, 5, 9]</code> and print it.</p>`,
+        starter: '# Sort [3,1,4,1,5,9] and print\n',
+        hint: 'Call .sort() on the list, then print it. Or use sorted() directly.',
+        check(output) { return output.trim() === '[1, 1, 3, 4, 5, 9]'; }
+    },
+    {
+        id: 'py_s9_6', chapter: 'Chapter 9: List Power', title: 'Reversing', xp: 38,
+        body: `<p><span class="highlight">.reverse()</span> reverses a list in place.</p>
+            <pre><code>arr = [1, 2, 3]
+arr.reverse()
+print(arr)  # [3, 2, 1]</code></pre>
+            <p><strong>Your task:</strong> Reverse <code>[1, 2, 3, 4, 5]</code> and print it.</p>`,
+        starter: '# Reverse [1,2,3,4,5] and print\n',
+        hint: 'Call .reverse() on the list, then print it.',
+        check(output) { return output.trim() === '[5, 4, 3, 2, 1]'; }
+    },
+    {
+        id: 'py_s9_7', chapter: 'Chapter 9: List Power', title: 'Filtering', xp: 42,
+        body: `<p>Use a <span class="highlight">list comprehension</span> to filter items.</p>
+            <pre><code>big = [n for n in [1, 5, 10] if n > 3]
+print(big)  # [5, 10]</code></pre>
+            <p><strong>Your task:</strong> From <code>[1,2,3,4,5,6,7,8,9,10]</code>, print only numbers greater than 5, each on its own line.</p>`,
+        starter: '# Print numbers > 5 from the list\n',
+        hint: 'Use a for loop or list comprehension with a condition, then print each number.',
+        check(output) { return output.trim() === '6\n7\n8\n9\n10'; }
+    },
+    {
+        id: 'py_s9_8', chapter: 'Chapter 9: List Power', title: 'Mapping', xp: 43,
+        body: `<p>Use a <span class="highlight">list comprehension</span> to transform each item.</p>
+            <pre><code>doubled = [n * 2 for n in [1, 2, 3]]
+print(doubled)  # [2, 4, 6]</code></pre>
+            <p><strong>Your task:</strong> From <code>[1, 2, 3, 4, 5]</code>, create a new list with each number doubled and print it.</p>`,
+        starter: '# Double each number in [1,2,3,4,5]\n',
+        hint: 'Use a list comprehension: [expression for item in list].',
+        check(output) { return output.trim() === '[2, 4, 6, 8, 10]'; }
+    },
+    {
+        id: 'py_s9_9', chapter: 'Chapter 9: List Power', title: 'Joining', xp: 40,
+        body: `<p><span class="highlight">.join()</span> combines list items into a string. Call it on the separator.</p>
+            <pre><code>print("-".join(["a", "b", "c"]))  # "a-b-c"</code></pre>
+            <p><strong>Your task:</strong> Join <code>["hello", "world"]</code> with a space and print it.</p>`,
+        starter: '# Join ["hello", "world"] with a space\n',
+        hint: 'Call .join() on the separator string, passing the list as the argument.',
+        check(output) { return output.trim() === 'hello world'; }
+    },
+    {
+        id: 'py_s9_10', chapter: 'Chapter 9: List Power', title: 'Length & Empty Check', xp: 45,
+        body: `<p>Use <span class="highlight">len()</span> to get the length of a list.</p>
+            <pre><code>arr = [1, 2, 3]
+print(len(arr))  # 3</code></pre>
+            <p><strong>Your task:</strong> Create an empty list and print its length.</p>`,
+        starter: '# Create an empty list, print its length\n',
+        hint: 'An empty list is just []. What does len() return for it?',
+        check(output) { return output.trim() === '0'; }
+    },
+    // ===== Unit 10: Logic & Problem Solving =====
+    {
+        id: 'py_s10_1', chapter: 'Chapter 10: Logic & Problem Solving', title: 'AND Operator', xp: 40,
+        body: `<p>The <span class="highlight">and</span> operator returns True only if both sides are true.</p>
+            <pre><code>print(5 > 3 and 10 > 7)  # True</code></pre>
+            <p><strong>Your task:</strong> Check if <code>15 > 10</code> and <code>15 < 20</code>, and print the result.</p>`,
+        starter: '# Check if 15 > 10 and 15 < 20\n',
+        hint: 'Put both conditions on either side of "and" and print the whole expression.',
+        check(output) { return output.trim() === 'True'; }
+    },
+    {
+        id: 'py_s10_2', chapter: 'Chapter 10: Logic & Problem Solving', title: 'OR Operator', xp: 40,
+        body: `<p>The <span class="highlight">or</span> operator returns True if at least one side is true.</p>
+            <pre><code>print(1 > 10 or 1 < 5)  # True</code></pre>
+            <p><strong>Your task:</strong> Check if <code>5 > 10</code> or <code>5 < 20</code>, and print the result.</p>`,
+        starter: '# Check if 5 > 10 or 5 < 20\n',
+        hint: 'Use "or" between the two conditions.',
+        check(output) { return output.trim() === 'True'; }
+    },
+    {
+        id: 'py_s10_3', chapter: 'Chapter 10: Logic & Problem Solving', title: 'NOT Operator', xp: 40,
+        body: `<p>The <span class="highlight">not</span> operator flips True to False and vice versa.</p>
+            <pre><code>print(not True)   # False
+print(not False)  # True</code></pre>
+            <p><strong>Your task:</strong> Print the opposite of <code>False</code>.</p>`,
+        starter: '# Print the opposite of False\n',
+        hint: 'Put the "not" keyword in front of the boolean value.',
+        check(output) { return output.trim() === 'True'; }
+    },
+    {
+        id: 'py_s10_4', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Nested If', xp: 42,
+        body: `<p>You can combine conditions to check ranges.</p>
+            <pre><code>temp = 72
+if temp >= 60 and temp <= 80:
+    print("nice weather")</code></pre>
+            <p><strong>Your task:</strong> Given <code>age = 15</code>, if age is between 13 and 17 (inclusive), print <code>teenager</code>.</p>`,
+        starter: 'age = 15\n# Check if age is between 13 and 17\n',
+        hint: 'Use "and" to combine two comparisons: one for the lower bound and one for the upper.',
+        check(output) { return output.trim() === 'teenager'; }
+    },
+    {
+        id: 'py_s10_5', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Counting in Loops', xp: 44,
+        body: `<p>Use a <span class="highlight">counter variable</span> to count things inside a loop.</p>
+            <pre><code>count = 0
+for i in range(1, 11):
+    if i % 2 == 0:
+        count += 1</code></pre>
+            <p><strong>Your task:</strong> Count how many even numbers are between 1 and 20. Print the count.</p>`,
+        starter: '# Count even numbers from 1 to 20\n',
+        hint: 'Start a counter at 0, loop 1-20, increment counter when the number is even.',
+        check(output) { return output.trim() === '10'; }
+    },
+    {
+        id: 'py_s10_6', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Sum of Evens', xp: 45,
+        body: `<p>Combine a loop with a condition to sum specific numbers.</p>
+            <pre><code>total = 0
+for i in range(1, 11):
+    if i % 2 == 0:
+        total += i</code></pre>
+            <p><strong>Your task:</strong> Sum all even numbers from 1 to 20 and print the result.</p>`,
+        starter: '# Sum even numbers from 1 to 20\n',
+        hint: 'Like counting, but add the number itself to the total instead of adding 1.',
+        check(output) { return output.trim() === '110'; }
+    },
+    {
+        id: 'py_s10_7', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Find First Match', xp: 46,
+        body: `<p>Use <span class="highlight">break</span> to stop a loop once you find what you need.</p>
+            <pre><code>for i in range(1, 101):
+    if i % 13 == 0:
+        print(i)
+        break</code></pre>
+            <p><strong>Your task:</strong> Find the first number divisible by 7 in the range 1-50 and print it.</p>`,
+        starter: '# Find first number divisible by 7\n',
+        hint: 'Loop from 1, check divisibility with %, and break as soon as you find one.',
+        check(output) { return output.trim() === '7'; }
+    },
+    {
+        id: 'py_s10_8', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Swap Variables', xp: 45,
+        body: `<p>Python makes swapping easy with <span class="highlight">tuple unpacking</span>.</p>
+            <pre><code>x, y = 1, 2
+x, y = y, x  # swapped!</code></pre>
+            <p><strong>Your task:</strong> Start with <code>a = 1</code> and <code>b = 2</code>. Swap them, then print <code>a</code> and <code>b</code> on separate lines.</p>`,
+        starter: 'a = 1\nb = 2\n# Swap a and b, then print both\n',
+        hint: 'Python lets you swap in one line: a, b = b, a.',
+        check(output) { return output.trim() === '2\n1'; }
+    },
+    {
+        id: 'py_s10_9', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Min Without Built-in', xp: 48,
+        body: `<p>Find the minimum by tracking the smallest value seen so far.</p>
+            <pre><code>minimum = arr[0]
+for n in arr:
+    if n < minimum:
+        minimum = n</code></pre>
+            <p><strong>Your task:</strong> Find the smallest number in <code>[5, 2, 8, 1, 9]</code> without using <code>min()</code>. Print it.</p>`,
+        starter: 'arr = [5, 2, 8, 1, 9]\n# Find the min without min()\n',
+        hint: 'Start with the first element as your "current minimum" and loop through comparing.',
+        check(output) { return output.trim() === '1'; }
+    },
+    {
+        id: 'py_s10_10', chapter: 'Chapter 10: Logic & Problem Solving', title: 'Multiplication Table', xp: 50,
+        body: `<p>Use a loop to build a times table.</p>
+            <pre><code>for i in range(1, 4):
+    print(f"2 x {i} = {2*i}")</code></pre>
+            <p><strong>Your task:</strong> Print the 5 times table from 5x1 to 5x5 in the format <code>5 x 1 = 5</code>.</p>`,
+        starter: '# Print 5 times table (5x1 through 5x5)\n',
+        hint: 'Loop from 1 to 5 and use an f-string for the output format.',
+        check(output) { return output.trim() === '5 x 1 = 5\n5 x 2 = 10\n5 x 3 = 15\n5 x 4 = 20\n5 x 5 = 25'; }
+    },
+    // ===== Unit 11: Building Things =====
+    {
+        id: 'py_s11_1', chapter: 'Chapter 11: Building Things', title: 'Simple Calculator', xp: 45,
+        body: `<p>Functions can use <span class="highlight">if/elif</span> to handle different operations.</p>
+            <pre><code>def greet(lang):
+    if lang == "en": return "Hello"
+    else: return "Hola"</code></pre>
+            <p><strong>Your task:</strong> Create <code>calc(a, op, b)</code> that handles <code>"+", "-", "*", "/"</code>. Print <code>calc(10, "+", 5)</code>.</p>`,
+        starter: '# Create calc(a, op, b) function\n',
+        hint: 'Use if/elif to check what op is, and return the corresponding math result.',
+        check(output) { return output.trim() === '15'; }
+    },
+    {
+        id: 'py_s11_2', chapter: 'Chapter 11: Building Things', title: 'Temperature Converter', xp: 46,
+        body: `<p>The formula to convert Celsius to Fahrenheit: <span class="highlight">F = C * 9/5 + 32</span></p>
+            <p><strong>Your task:</strong> Create <code>to_fahrenheit(c)</code> that returns the Fahrenheit value. Print <code>to_fahrenheit(0)</code>.</p>`,
+        starter: '# Create to_fahrenheit(c) function\n',
+        hint: 'Just apply the formula inside the function and return the result.',
+        check(output) { return output.trim() === '32' || output.trim() === '32.0'; }
+    },
+    {
+        id: 'py_s11_3', chapter: 'Chapter 11: Building Things', title: 'Tip Calculator', xp: 47,
+        body: `<p>Calculate a tip as a percentage of the bill.</p>
+            <pre><code># 20% of 50 = 50 * 20 / 100 = 10</code></pre>
+            <p><strong>Your task:</strong> Create <code>tip(bill, percent)</code> that returns the tip amount. Print <code>tip(50, 20)</code>.</p>`,
+        starter: '# Create tip(bill, percent) function\n',
+        hint: 'Multiply the bill by the percent and divide by 100.',
+        check(output) { return output.trim() === '10' || output.trim() === '10.0'; }
+    },
+    {
+        id: 'py_s11_4', chapter: 'Chapter 11: Building Things', title: 'Word Counter', xp: 48,
+        body: `<p>You can count words by <span class="highlight">splitting</span> a string on spaces.</p>
+            <pre><code>len("a b c".split())  # 3</code></pre>
+            <p><strong>Your task:</strong> Count the words in <code>"the quick brown fox"</code> and print the count.</p>`,
+        starter: '# Count the words in "the quick brown fox"\n',
+        hint: 'Split the string by spaces, then check the length of the resulting list.',
+        check(output) { return output.trim() === '4'; }
+    },
+    {
+        id: 'py_s11_5', chapter: 'Chapter 11: Building Things', title: 'Vowel Counter', xp: 50,
+        body: `<p>Loop through each character and check if it is a <span class="highlight">vowel</span> (a, e, i, o, u).</p>
+            <p><strong>Your task:</strong> Count the vowels in <code>"hello world"</code> and print the count.</p>`,
+        starter: '# Count vowels in "hello world"\n',
+        hint: 'Loop through each character. Check if it is in "aeiou". Keep a counter.',
+        check(output) { return output.trim() === '3'; }
+    },
+    {
+        id: 'py_s11_6', chapter: 'Chapter 11: Building Things', title: 'Reverse Number', xp: 50,
+        body: `<p>Convert a number to a string, reverse it, and print.</p>
+            <pre><code>str(123)[::-1]  # "321"</code></pre>
+            <p><strong>Your task:</strong> Reverse the number <code>12345</code> and print the result.</p>`,
+        starter: '# Reverse the number 12345\n',
+        hint: 'Turn it into a string and use slicing with [::-1] to reverse.',
+        check(output) { return output.trim() === '54321'; }
+    },
+    {
+        id: 'py_s11_7', chapter: 'Chapter 11: Building Things', title: 'Palindrome Function', xp: 52,
+        body: `<p>A <span class="highlight">palindrome</span> reads the same forwards and backwards (e.g. "racecar").</p>
+            <p><strong>Your task:</strong> Create <code>is_palindrome(word)</code> that returns True/False. Print <code>is_palindrome("racecar")</code>.</p>`,
+        starter: '# Create is_palindrome(word) function\n',
+        hint: 'Reverse the word and compare it to the original.',
+        check(output) { return output.trim() === 'True'; }
+    },
+    {
+        id: 'py_s11_8', chapter: 'Chapter 11: Building Things', title: 'Title Case', xp: 52,
+        body: `<p><span class="highlight">.title()</span> capitalizes the first letter of every word.</p>
+            <pre><code>print("hello world".title())  # "Hello World"</code></pre>
+            <p><strong>Your task:</strong> Convert <code>"hello world"</code> to <code>"Hello World"</code> and print it.</p>`,
+        starter: '# Convert "hello world" to title case\n',
+        hint: 'Python has a built-in string method for this exact transformation.',
+        check(output) { return output.trim() === 'Hello World'; }
+    },
+    {
+        id: 'py_s11_9', chapter: 'Chapter 11: Building Things', title: 'Remove Duplicates', xp: 53,
+        body: `<p>A <span class="highlight">set</span> automatically removes duplicate values.</p>
+            <pre><code>unique = list(set([1, 1, 2]))  # [1, 2]</code></pre>
+            <p><strong>Your task:</strong> Remove duplicates from <code>[1, 2, 2, 3, 3, 3, 4]</code> and print the sorted unique values.</p>`,
+        starter: '# Remove duplicates from the list\n',
+        hint: 'Convert to a set, back to a list, sort it, then print.',
+        check(output) { let s = output.trim(); return s.includes('1') && s.includes('2') && s.includes('3') && s.includes('4'); }
+    },
+    {
+        id: 'py_s11_10', chapter: 'Chapter 11: Building Things', title: 'Caesar Cipher', xp: 55,
+        body: `<p>A <span class="highlight">Caesar cipher</span> shifts each letter forward in the alphabet.</p>
+            <pre><code>chr(ord("a") + 1)  # "b"</code></pre>
+            <p><strong>Your task:</strong> Shift each letter in <code>"abc"</code> forward by 1 to get <code>"bcd"</code> and print it.</p>`,
+        starter: '# Shift "abc" forward by 1\n',
+        hint: 'Loop through each character, get its ord(), add 1, convert back with chr().',
+        check(output) { return output.trim() === 'bcd'; }
+    },
+    // ===== Unit 12: Level Up =====
+    {
+        id: 'py_s12_1', chapter: 'Chapter 12: Level Up', title: 'Scope', xp: 50,
+        body: `<p>Variables declared inside a function are <span class="highlight">local</span> — they don't exist outside.</p>
+            <pre><code>def test():
+    x = 10
+# x is not available here</code></pre>
+            <p><strong>Your task:</strong> Create a function that prints <code>inside</code>. Call it, then print <code>outside</code> after.</p>`,
+        starter: '# Show scope: print "inside" from a function, then "outside" after\n',
+        hint: 'Define a function with print("inside"), call it, then print("outside").',
+        check(output) { return output.trim() === 'inside\noutside'; }
+    },
+    {
+        id: 'py_s12_2', chapter: 'Chapter 12: Level Up', title: 'Default Parameters', xp: 52,
+        body: `<p><span class="highlight">Default parameters</span> provide a fallback value when no argument is passed.</p>
+            <pre><code>def greet(name="World"):
+    print("Hello, " + name)</code></pre>
+            <p><strong>Your task:</strong> Create <code>greet(name="World")</code> that prints <code>"Hello, " + name</code>. Call it with no arguments.</p>`,
+        starter: '# Create greet with default parameter\n',
+        hint: 'Put the default value right in the parameter list using =.',
+        check(output) { return output.trim() === 'Hello, World'; }
+    },
+    {
+        id: 'py_s12_3', chapter: 'Chapter 12: Level Up', title: 'Multiple Return Values', xp: 54,
+        body: `<p>Python functions can return <span class="highlight">multiple values</span> as a tuple.</p>
+            <pre><code>def min_max(arr):
+    return min(arr), max(arr)</code></pre>
+            <p><strong>Your task:</strong> Create <code>min_max(arr)</code> returning min and max of <code>[3,1,4,1,5]</code>. Print both on separate lines.</p>`,
+        starter: '# Create min_max function\n',
+        hint: 'Return two values separated by a comma. Unpack them when you call the function.',
+        check(output) { return output.trim() === '1\n5'; }
+    },
+    {
+        id: 'py_s12_4', chapter: 'Chapter 12: Level Up', title: 'Recursion Intro', xp: 56,
+        body: `<p><span class="highlight">Recursion</span> is when a function calls itself. Always have a stopping condition!</p>
+            <pre><code>def count(n):
+    if n < 0: return
+    print(n)
+    count(n - 1)</code></pre>
+            <p><strong>Your task:</strong> Create <code>countdown(n)</code> that prints n down to 0. Call with <code>5</code>.</p>`,
+        starter: '# Create recursive countdown function\n',
+        hint: 'Print n, then call the function again with n-1. Stop when n goes below 0.',
+        check(output) { return output.trim() === '5\n4\n3\n2\n1\n0'; }
+    },
+    {
+        id: 'py_s12_5', chapter: 'Chapter 12: Level Up', title: 'Higher Order Functions', xp: 58,
+        body: `<p>Use <span class="highlight">list comprehensions</span> to filter and transform in one step.</p>
+            <pre><code>[n**2 for n in [1,2,3,4] if n > 2]  # [9, 16]</code></pre>
+            <p><strong>Your task:</strong> From <code>[1,2,3,4,5,6]</code>, get squares of even numbers. Print each on its own line.</p>`,
+        starter: '# Squares of even numbers from [1,2,3,4,5,6]\n',
+        hint: 'Use a list comprehension with an if condition for even, and square each one.',
+        check(output) { return output.trim() === '4\n16\n36'; }
+    },
+    {
+        id: 'py_s12_6', chapter: 'Chapter 12: Level Up', title: 'Error Handling', xp: 55,
+        body: `<p><span class="highlight">try/except</span> lets you handle errors gracefully instead of crashing.</p>
+            <pre><code>try:
+    int("oops")
+except:
+    print("Error caught!")</code></pre>
+            <p><strong>Your task:</strong> Use try/except to catch the error from <code>int("bad")</code>. Print <code>caught an error!</code>.</p>`,
+        starter: '# Catch an error from int("bad")\n',
+        hint: 'Put the risky code in try: and your message in except:.',
+        check(output) { return output.trim() === 'caught an error!'; }
+    },
+    {
+        id: 'py_s12_7', chapter: 'Chapter 12: Level Up', title: 'Letter Frequency', xp: 58,
+        body: `<p>Use a <span class="highlight">dictionary</span> to count how often each letter appears.</p>
+            <pre><code>freq = {}
+for ch in "aab":
+    freq[ch] = freq.get(ch, 0) + 1
+# {"a": 2, "b": 1}</code></pre>
+            <p><strong>Your task:</strong> Count letter frequency in <code>"hello"</code>. Print the count of <code>"l"</code>.</p>`,
+        starter: '# Count letter frequency in "hello"\n',
+        hint: 'Build a frequency dictionary by looping through each character, then access the key you need.',
+        check(output) { return output.trim() === '2'; }
+    },
+    {
+        id: 'py_s12_8', chapter: 'Chapter 12: Level Up', title: 'Nested Loops', xp: 56,
+        body: `<p><span class="highlight">Nested loops</span> — a loop inside a loop — are great for grids.</p>
+            <pre><code>for r in range(2):
+    row = ""
+    for c in range(3):
+        row += "# "
+    print(row.strip())</code></pre>
+            <p><strong>Your task:</strong> Print a 3x3 grid of stars. Each row should be <code>* * *</code>.</p>`,
+        starter: '# Print a 3x3 grid of stars\n',
+        hint: 'Outer loop for rows, inner loop to build each row string with stars and spaces.',
+        check(output) { return output.trim() === '* * *\n* * *\n* * *'; }
+    },
+    {
+        id: 'py_s12_9', chapter: 'Chapter 12: Level Up', title: 'Sorting Dicts', xp: 60,
+        body: `<p>Sort a list of dictionaries using a <span class="highlight">key function</span>.</p>
+            <pre><code>sorted(people, key=lambda p: p["age"])</code></pre>
+            <p><strong>Your task:</strong> Sort <code>[{"name":"Charlie","age":30},{"name":"Alice","age":25},{"name":"Bob","age":35}]</code> by age. Print the first name.</p>`,
+        starter: '# Sort by age and print the youngest name\n',
+        hint: 'Use sorted() with a key=lambda to sort by the "age" key, then access [0]["name"].',
+        check(output) { return output.trim() === 'Alice'; }
+    },
+    {
+        id: 'py_s12_10', chapter: 'Chapter 12: Level Up', title: 'Final Boss: Mini Game', xp: 65,
+        body: `<p>Put it all together! Simulate a simple <span class="highlight">combat system</span>.</p>
+            <p><strong>Your task:</strong> Create <code>attack(health, damage)</code> that returns new health. Starting at <code>health=100</code> and <code>damage=25</code>, call it 3 times and print health after each.</p>`,
+        starter: '# Create attack function and simulate 3 attacks\n',
+        hint: 'The function subtracts damage from health and returns the result. Call it in sequence, updating health each time.',
+        check(output) { return output.trim() === '75\n50\n25'; }
     }
 ];
 

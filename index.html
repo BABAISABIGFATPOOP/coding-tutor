@@ -1681,15 +1681,23 @@ function escapeHtml(s) {
 
 function executeJS(code) {
     let logs = [];
+    let loopCount = 0;
+    const maxLoops = 100000;
     const fakeConsole = {
-        log: (...args) => logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '))
+        log: (...args) => {
+            if (logs.length > 1000) throw new Error('Too much output! Check for an infinite loop.');
+            logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
+        }
     };
+    // Inject loop protection: add a counter check into while/for loops
+    let safeCode = code.replace(/(while\s*\([^)]*\)\s*\{)/g, '$1 if(++__lc__>' + maxLoops + ')throw new Error("Infinite loop detected! Make sure your loop has a way to stop.");');
+    safeCode = safeCode.replace(/(for\s*\([^)]*\)\s*\{)/g, '$1 if(++__lc__>' + maxLoops + ')throw new Error("Infinite loop detected! Make sure your loop has a way to stop.");');
     try {
-        const fn = new Function('__console__', `"use strict";const console=__console__;const alert=undefined,prompt=undefined,confirm=undefined,fetch=undefined,XMLHttpRequest=undefined;${code}`);
-        fn(fakeConsole);
+        const fn = new Function('__console__', '__lc__', `"use strict";const console=__console__;const alert=undefined,prompt=undefined,confirm=undefined,fetch=undefined,XMLHttpRequest=undefined;let __lc=0;${safeCode}`);
+        fn(fakeConsole, 0);
         return { text: logs.join('\n'), error: null };
     } catch(e) {
-        return { text: '', error: e.toString() };
+        return { text: logs.join('\n'), error: e.toString() };
     }
 }
 

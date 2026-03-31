@@ -1053,7 +1053,7 @@ const jsLessons = [
             <p>Text must be wrapped in <span class="highlight">quotes</span> — either <code>"double"</code> or <code>'single'</code>.</p>
             <p><strong>Your task:</strong> Print <code>Hello, World!</code> to the output.</p>`,
         starter: '// Print "Hello, World!" below\n',
-        hint: 'console.log("Hello, World!")',
+        hint: 'Use console.log() and make sure to put the text in quotes. Look at the example above!',
         check(output) { return output.trim().includes('Hello, World!'); }
     },
     {
@@ -1064,7 +1064,7 @@ let age = 15
 let score = 99.5</code></pre>
             <p><strong>Your task:</strong> Create a variable called <code>greeting</code> that holds <code>"Hello!"</code>, then print it.</p>`,
         starter: '// Create a variable called greeting\n// Then print it with console.log()\n',
-        hint: 'let greeting = "Hello!"\nconsole.log(greeting)',
+        hint: 'Two steps: first create the variable with "let", then use console.log() with the variable name (no quotes around the variable name).',
         check(output) { return output.trim() === 'Hello!'; }
     },
     {
@@ -1076,7 +1076,7 @@ console.log(a + b)  // 13
 console.log(a * b)  // 30</code></pre>
             <p><strong>Your task:</strong> Create <code>x = 8</code> and <code>y = 4</code>. Print <code>x * y</code>.</p>`,
         starter: '// Create x and y, then print x * y\n',
-        hint: 'let x = 8\nlet y = 4\nconsole.log(x * y)',
+        hint: 'Create two variables like in the example, then console.log() with the * symbol between them.',
         check(output) { return output.trim() === '32'; }
     },
     {
@@ -1087,7 +1087,7 @@ let second = "Quest"
 console.log(first + " " + second)  // "Code Quest"</code></pre>
             <p><strong>Your task:</strong> Create <code>firstName = "Super"</code> and <code>lastName = "Coder"</code>. Print them with a space between.</p>`,
         starter: '// Combine firstName and lastName with a space\n',
-        hint: 'let firstName = "Super"\nlet lastName = "Coder"\nconsole.log(firstName + " " + lastName)',
+        hint: 'To add a space between two strings, use + " " + between them. Check the example above!',
         check(output) { return output.trim() === 'Super Coder'; }
     },
     {
@@ -1103,7 +1103,7 @@ if (score >= 90) {
 }</code></pre>
             <p><strong>Your task:</strong> Create <code>temperature = 35</code>. If it's greater than 30, print <code>"It's hot!"</code>. Otherwise print <code>"It's cool."</code></p>`,
         starter: '// Check the temperature\nlet temperature = 35\n',
-        hint: 'if (temperature > 30) {\n    console.log("It\'s hot!")\n} else {\n    console.log("It\'s cool.")\n}',
+        hint: 'Use if (...) { } else { } — the condition goes in parentheses with the > symbol. Don\'t forget the curly braces!',
         check(output) { return output.trim() === "It's hot!"; }
     },
     {
@@ -1116,7 +1116,7 @@ if (score >= 90) {
             <p><code>let i = 0</code> — start at 0. <code>i < 5</code> — keep going while less than 5. <code>i++</code> — add 1 each time.</p>
             <p><strong>Your task:</strong> Print numbers <code>1</code> through <code>5</code>.</p>`,
         starter: '// Print numbers 1 through 5\n',
-        hint: 'for (let i = 1; i <= 5; i++) {\n    console.log(i)\n}',
+        hint: 'The example starts at 0. You need to start at 1 instead. What should the stop condition be to include 5?',
         check(output) { return output.trim() === '1\n2\n3\n4\n5'; }
     },
     {
@@ -1129,7 +1129,7 @@ while (count < 3) {
 }</code></pre>
             <p><strong>Your task:</strong> Use a while loop to print <code>"Go!"</code> exactly 3 times.</p>`,
         starter: '// Print "Go!" 3 times using a while loop\n',
-        hint: 'let count = 0\nwhile (count < 3) {\n    console.log("Go!")\n    count++\n}',
+        hint: 'Follow the same pattern as the example: create a counter, use while, and don\'t forget count++ or the loop will never stop!',
         check(output) { return output.trim() === 'Go!\nGo!\nGo!'; }
     },
     {
@@ -1141,7 +1141,7 @@ console.log(fruits[1])  // "banana"</code></pre>
             <p>Arrays start counting at <span class="highlight">0</span>, not 1!</p>
             <p><strong>Your task:</strong> Create <code>colors</code> with <code>"red", "green", "blue"</code>. Print the second item.</p>`,
         starter: '// Create a colors array and print the second item\n',
-        hint: 'let colors = ["red", "green", "blue"]\nconsole.log(colors[1])',
+        hint: 'Remember: arrays start at 0. So the "second" item is actually index 1, not 2!',
         check(output) { return output.trim() === 'green'; }
     },
     {
@@ -1153,7 +1153,7 @@ for (let pet of pets) {
 }</code></pre>
             <p><strong>Your task:</strong> Create <code>numbers = [10, 20, 30]</code>. Loop through and print each one.</p>`,
         starter: '// Create numbers array and print each value\n',
-        hint: 'let numbers = [10, 20, 30]\nfor (let num of numbers) {\n    console.log(num)\n}',
+        hint: 'First create the array, then use "for (let ___ of ___)" just like the pets example. Pick a good name for each item.',
         check(output) { return output.trim() === '10\n20\n30'; }
     },
     {
@@ -1165,7 +1165,7 @@ for (let pet of pets) {
 sayHello()  // prints "Hello there!"</code></pre>
             <p><strong>Your task:</strong> Create a function <code>cheer</code> that prints <code>"Let's go!"</code>. Call it twice.</p>`,
         starter: '// Define the cheer function and call it twice\n',
-        hint: 'function cheer() {\n    console.log("Let\'s go!")\n}\ncheer()\ncheer()',
+        hint: 'Define it just like sayHello but with a different name and message. Then write the function name with () twice to call it twice.',
         check(output) { return output.trim() === "Let's go!\nLet's go!"; }
     },
     {
@@ -1177,7 +1177,7 @@ sayHello()  // prints "Hello there!"</code></pre>
 greet("Dylan")  // "Hello, Dylan!"</code></pre>
             <p><strong>Your task:</strong> Create <code>double</code> that takes a number and prints it * 2. Call it with <code>7</code>.</p>`,
         starter: '// Create the double function\n',
-        hint: 'function double(num) {\n    console.log(num * 2)\n}\ndouble(7)',
+        hint: 'Your function needs a parameter (like "num") inside the parentheses. Inside, print that parameter times 2.',
         check(output) { return output.trim() === '14'; }
     },
     {
@@ -1190,7 +1190,7 @@ let result = add(3, 5)
 console.log(result)  // 8</code></pre>
             <p><strong>Your task:</strong> Create <code>multiply(a, b)</code> that returns a * b. Print <code>multiply(6, 7)</code>.</p>`,
         starter: '// Create multiply function that returns the product\n',
-        hint: 'function multiply(a, b) {\n    return a * b\n}\nconsole.log(multiply(6, 7))',
+        hint: 'Use "return" instead of console.log inside the function. Then wrap the function call in console.log() to print what it returns.',
         check(output) { return output.trim() === '42'; }
     },
     {
@@ -1204,7 +1204,7 @@ console.log(result)  // 8</code></pre>
 console.log(player.name)  // "Dylan"</code></pre>
             <p><strong>Your task:</strong> Create <code>pet</code> with <code>name: "Buddy"</code> and <code>type: "dog"</code>. Print <code>pet.name</code>.</p>`,
         starter: '// Create a pet object and print its name\n',
-        hint: 'let pet = {\n    name: "Buddy",\n    type: "dog"\n}\nconsole.log(pet.name)',
+        hint: 'Use curly braces { } with key: value pairs, just like the player example. Access properties with a dot.',
         check(output) { return output.trim() === 'Buddy'; }
     },
     {
@@ -1216,7 +1216,7 @@ console.log(player.name)  // "Dylan"</code></pre>
             - If divisible by both, print <code>"FizzBuzz"</code></p>
             <p>Use <code>%</code> (modulo) — <code>6 % 3 === 0</code> means 6 is divisible by 3.</p>`,
         starter: '// FizzBuzz: Print 1 to 15 with the rules above\n',
-        hint: 'for (let i = 1; i <= 15; i++) {\n    if (i % 3 === 0 && i % 5 === 0) {\n        console.log("FizzBuzz")\n    } else if (i % 3 === 0) {\n        console.log("Fizz")\n    } else if (i % 5 === 0) {\n        console.log("Buzz")\n    } else {\n        console.log(i)\n    }\n}',
+        hint: 'Use a for loop 1-15. Inside, use if/else if/else. Important: check the "both" case FIRST, because a number divisible by both would also match the individual checks!',
         check(output) { return output.trim() === '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz'; }
     }
 ];
@@ -1229,7 +1229,7 @@ const pythonLessons = [
             <p>Text must be wrapped in <span class="highlight">quotes</span>.</p>
             <p><strong>Your task:</strong> Print <code>Hello, World!</code></p>`,
         starter: '# Print "Hello, World!" below\n',
-        hint: 'print("Hello, World!")',
+        hint: 'Use print() with the text inside quotes. Look at the example!',
         check(output) { return output.trim().includes('Hello, World!'); }
     },
     {
@@ -1240,7 +1240,7 @@ age = 15
 score = 99.5</code></pre>
             <p><strong>Your task:</strong> Create a variable <code>greeting</code> set to <code>"Hello!"</code>, then print it.</p>`,
         starter: '# Create a variable called greeting\n# Then print it\n',
-        hint: 'greeting = "Hello!"\nprint(greeting)',
+        hint: 'Two steps: first assign a value to the variable name, then use print() with the variable name (no quotes around it).',
         check(output) { return output.trim() === 'Hello!'; }
     },
     {
@@ -1252,7 +1252,7 @@ print(a + b)  # 13
 print(a * b)  # 30</code></pre>
             <p><strong>Your task:</strong> Create <code>x = 8</code> and <code>y = 4</code>. Print <code>x * y</code>.</p>`,
         starter: '# Create x and y, then print x * y\n',
-        hint: 'x = 8\ny = 4\nprint(x * y)',
+        hint: 'Create two variables, then print() them with the * symbol between them.',
         check(output) { return output.trim() === '32'; }
     },
     {
@@ -1264,7 +1264,7 @@ print(first + " " + second)  # "Code Quest"
 print(f"{first} {second}")   # same thing!</code></pre>
             <p><strong>Your task:</strong> Create <code>first_name = "Super"</code> and <code>last_name = "Coder"</code>. Print them with a space between.</p>`,
         starter: '# Combine first_name and last_name\n',
-        hint: 'first_name = "Super"\nlast_name = "Coder"\nprint(first_name + " " + last_name)',
+        hint: 'To get a space between two strings, use + " " + between them. Or try an f-string!',
         check(output) { return output.trim() === 'Super Coder'; }
     },
     {
@@ -1279,7 +1279,7 @@ else:
     print("Keep trying!")</code></pre>
             <p><strong>Your task:</strong> Create <code>temperature = 35</code>. If greater than 30, print <code>"It's hot!"</code>. Otherwise print <code>"It's cool."</code></p>`,
         starter: '# Check the temperature\ntemperature = 35\n',
-        hint: 'if temperature > 30:\n    print("It\'s hot!")\nelse:\n    print("It\'s cool.")',
+        hint: 'Use if with a colon at the end, then indent the next line. Don\'t forget the else: block for the other case!',
         check(output) { return output.trim() === "It's hot!"; }
     },
     {
@@ -1291,7 +1291,7 @@ else:
             <p><code>range(1, 6)</code> gives 1, 2, 3, 4, 5.</p>
             <p><strong>Your task:</strong> Print numbers <code>1</code> through <code>5</code>.</p>`,
         starter: '# Print numbers 1 through 5\n',
-        hint: 'for i in range(1, 6):\n    print(i)',
+        hint: 'range() takes a start and stop number, but stop is NOT included. So to get 5, you need to go one higher...',
         check(output) { return output.trim() === '1\n2\n3\n4\n5'; }
     },
     {
@@ -1303,7 +1303,7 @@ while count < 3:
     count += 1</code></pre>
             <p><strong>Your task:</strong> Print <code>"Go!"</code> exactly 3 times using a while loop.</p>`,
         starter: '# Print "Go!" 3 times using a while loop\n',
-        hint: 'count = 0\nwhile count < 3:\n    print("Go!")\n    count += 1',
+        hint: 'Same pattern as the example: make a counter, use while, and increase the counter each time with += 1 or the loop runs forever!',
         check(output) { return output.trim() === 'Go!\nGo!\nGo!'; }
     },
     {
@@ -1315,7 +1315,7 @@ print(fruits[1])  # "banana"</code></pre>
             <p>Lists start at <span class="highlight">0</span>!</p>
             <p><strong>Your task:</strong> Create <code>colors</code> with <code>"red", "green", "blue"</code>. Print the second item.</p>`,
         starter: '# Create a colors list and print the second item\n',
-        hint: 'colors = ["red", "green", "blue"]\nprint(colors[1])',
+        hint: 'Lists start counting at 0. So the "second" item is at index 1, not 2!',
         check(output) { return output.trim() === 'green'; }
     },
     {
@@ -1326,7 +1326,7 @@ for pet in pets:
     print(pet)</code></pre>
             <p><strong>Your task:</strong> Create <code>numbers = [10, 20, 30]</code>. Loop and print each one.</p>`,
         starter: '# Create numbers list and print each value\n',
-        hint: 'numbers = [10, 20, 30]\nfor num in numbers:\n    print(num)',
+        hint: 'Create the list first, then use "for ___ in ___:" like the pets example. Pick a name for each item.',
         check(output) { return output.trim() === '10\n20\n30'; }
     },
     {
@@ -1338,7 +1338,7 @@ for pet in pets:
 say_hello()  # prints "Hello there!"</code></pre>
             <p><strong>Your task:</strong> Create a function <code>cheer</code> that prints <code>"Let's go!"</code>. Call it twice.</p>`,
         starter: '# Define the cheer function and call it twice\n',
-        hint: 'def cheer():\n    print("Let\'s go!")\n\ncheer()\ncheer()',
+        hint: 'Use "def" to define it like say_hello. Then write the function name with () on two separate lines to call it twice.',
         check(output) { return output.trim() === "Let's go!\nLet's go!"; }
     },
     {
@@ -1350,7 +1350,7 @@ say_hello()  # prints "Hello there!"</code></pre>
 greet("Dylan")  # "Hello, Dylan!"</code></pre>
             <p><strong>Your task:</strong> Create <code>double</code> that takes a number and prints it * 2. Call with <code>7</code>.</p>`,
         starter: '# Create the double function\n',
-        hint: 'def double(num):\n    print(num * 2)\n\ndouble(7)',
+        hint: 'Your function needs a parameter name inside the parentheses. Inside, print that parameter times 2.',
         check(output) { return output.trim() === '14'; }
     },
     {
@@ -1363,7 +1363,7 @@ result = add(3, 5)
 print(result)  # 8</code></pre>
             <p><strong>Your task:</strong> Create <code>multiply(a, b)</code> that returns a * b. Print <code>multiply(6, 7)</code>.</p>`,
         starter: '# Create multiply function that returns the product\n',
-        hint: 'def multiply(a, b):\n    return a * b\n\nprint(multiply(6, 7))',
+        hint: 'Use "return" instead of print inside the function. Then wrap the function call in print() to see what it returns.',
         check(output) { return output.trim() === '42'; }
     },
     {
@@ -1377,7 +1377,7 @@ print(result)  # 8</code></pre>
 print(player["name"])  # "Dylan"</code></pre>
             <p><strong>Your task:</strong> Create <code>pet</code> with <code>"name": "Buddy"</code> and <code>"type": "dog"</code>. Print <code>pet["name"]</code>.</p>`,
         starter: '# Create a pet dictionary and print its name\n',
-        hint: 'pet = {"name": "Buddy", "type": "dog"}\nprint(pet["name"])',
+        hint: 'Use curly braces { } with "key": value pairs. Access values with square brackets and the key name in quotes.',
         check(output) { return output.trim() === 'Buddy'; }
     },
     {
@@ -1388,7 +1388,7 @@ print(player["name"])  # "Dylan"</code></pre>
             - Both → <code>"FizzBuzz"</code></p>
             <p>Use <code>%</code> (modulo) — <code>6 % 3 == 0</code> means divisible by 3.</p>`,
         starter: '# FizzBuzz: Print 1 to 15 with the rules above\n',
-        hint: 'for i in range(1, 16):\n    if i % 3 == 0 and i % 5 == 0:\n        print("FizzBuzz")\n    elif i % 3 == 0:\n        print("Fizz")\n    elif i % 5 == 0:\n        print("Buzz")\n    else:\n        print(i)',
+        hint: 'Use a for loop with range. Inside, use if/elif/else. Key trick: check the "both 3 AND 5" case FIRST, before checking them individually!',
         check(output) { return output.trim() === '1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz'; }
     }
 ];
@@ -1396,70 +1396,70 @@ print(player["name"])  # "Dylan"</code></pre>
 const jsChallenges = [
     { id: 'jsc_countdown', title: 'Countdown!', desc: 'Print numbers from 10 down to 1.', difficulty: 'easy', xp: 40,
       starter: '// Count down from 10 to 1\n',
-      hint: 'for (let i = 10; i >= 1; i--) {\n    console.log(i)\n}',
+      hint: 'Start your loop at 10 instead of 1. Use i-- to go down instead of i++ to go up.',
       check(o) { return o.trim() === '10\n9\n8\n7\n6\n5\n4\n3\n2\n1'; } },
     { id: 'jsc_sum', title: 'Sum it Up', desc: 'Print the sum of numbers 1 to 10.', difficulty: 'easy', xp: 45,
       starter: '// Find the sum of 1 + 2 + ... + 10\n',
-      hint: 'let sum = 0\nfor (let i = 1; i <= 10; i++) sum += i\nconsole.log(sum)',
+      hint: 'Create a variable to hold the total (start at 0). Then loop 1-10 and keep adding each number to it.',
       check(o) { return o.trim() === '55'; } },
     { id: 'jsc_even', title: 'Even Numbers', desc: 'Print even numbers from 1 to 20.', difficulty: 'easy', xp: 45,
       starter: '// Print even numbers from 1 to 20\n',
-      hint: 'for (let i = 2; i <= 20; i += 2) console.log(i)',
+      hint: 'A number is even if dividing by 2 has no remainder (% 2 === 0). Or you could start at 2 and go up by 2 each time...',
       check(o) { return o.trim() === '2\n4\n6\n8\n10\n12\n14\n16\n18\n20'; } },
     { id: 'jsc_reverse', title: 'Reverse a Word', desc: 'Reverse "hello" and print it.', difficulty: 'medium', xp: 60,
       starter: 'let word = "hello"\n// Reverse it and print\n',
-      hint: 'console.log(word.split("").reverse().join(""))',
+      hint: 'You can turn a string into an array of letters with .split(""), then there\'s a handy array method to flip it around...',
       check(o) { return o.trim() === 'olleh'; } },
     { id: 'jsc_max', title: 'Find the Max', desc: 'Find the largest in [3, 7, 2, 9, 4].', difficulty: 'medium', xp: 65,
       starter: 'let nums = [3, 7, 2, 9, 4]\n// Find and print the largest\n',
-      hint: 'console.log(Math.max(...nums))',
+      hint: 'Try looping through and keeping track of the biggest number you\'ve seen so far. Or look up Math.max()...',
       check(o) { return o.trim() === '9'; } },
     { id: 'jsc_pyramid', title: 'Star Pyramid', desc: 'Print 5 rows: *, **, ***, ****, *****', difficulty: 'medium', xp: 70,
       starter: '// Build a star pyramid with 5 rows\n',
-      hint: 'for (let i = 1; i <= 5; i++) console.log("*".repeat(i))',
+      hint: 'Row 1 has 1 star, row 2 has 2 stars... Use a loop and think about how to repeat a character. Strings have a .repeat() method!',
       check(o) { return o.trim() === '*\n**\n***\n****\n*****'; } },
     { id: 'jsc_factorial', title: 'Factorial', desc: 'Calculate 5! (5*4*3*2*1 = 120).', difficulty: 'hard', xp: 80,
       starter: '// Calculate 5!\n',
-      hint: 'let result = 1\nfor (let i = 1; i <= 5; i++) result *= i\nconsole.log(result)',
+      hint: 'Start with a result of 1 and multiply it by each number from 1 to 5 using a loop.',
       check(o) { return o.trim() === '120'; } },
     { id: 'jsc_palindrome', title: 'Palindrome', desc: 'Check if "racecar" is a palindrome. Print true/false.', difficulty: 'hard', xp: 85,
       starter: 'let word = "racecar"\n// Is it a palindrome?\n',
-      hint: 'console.log(word === word.split("").reverse().join(""))',
+      hint: 'A palindrome reads the same forwards and backwards. What if you reversed the word and compared it to the original with ===?',
       check(o) { return o.trim() === 'true'; } }
 ];
 
 const pythonChallenges = [
     { id: 'pyc_countdown', title: 'Countdown!', desc: 'Print numbers from 10 down to 1.', difficulty: 'easy', xp: 40,
       starter: '# Count down from 10 to 1\n',
-      hint: 'for i in range(10, 0, -1):\n    print(i)',
+      hint: 'range() can take a third argument for the step size. A negative step goes backwards!',
       check(o) { return o.trim() === '10\n9\n8\n7\n6\n5\n4\n3\n2\n1'; } },
     { id: 'pyc_sum', title: 'Sum it Up', desc: 'Print the sum of numbers 1 to 10.', difficulty: 'easy', xp: 45,
       starter: '# Find the sum of 1 + 2 + ... + 10\n',
-      hint: 'total = 0\nfor i in range(1, 11):\n    total += i\nprint(total)',
+      hint: 'Create a variable to hold the total (start at 0). Loop 1-10 and keep adding each number to it.',
       check(o) { return o.trim() === '55'; } },
     { id: 'pyc_even', title: 'Even Numbers', desc: 'Print even numbers from 1 to 20.', difficulty: 'easy', xp: 45,
       starter: '# Print even numbers from 1 to 20\n',
-      hint: 'for i in range(2, 21, 2):\n    print(i)',
+      hint: 'You can use range() with a step of 2 starting from 2, or loop 1-20 and use an if to check if the number is even (% 2 == 0).',
       check(o) { return o.trim() === '2\n4\n6\n8\n10\n12\n14\n16\n18\n20'; } },
     { id: 'pyc_reverse', title: 'Reverse a Word', desc: 'Reverse "hello" and print it.', difficulty: 'medium', xp: 60,
       starter: 'word = "hello"\n# Reverse it and print\n',
-      hint: 'print(word[::-1])',
+      hint: 'Python has a neat string slicing trick with [::-1] that reverses things. Try it!',
       check(o) { return o.trim() === 'olleh'; } },
     { id: 'pyc_max', title: 'Find the Max', desc: 'Find the largest in [3, 7, 2, 9, 4].', difficulty: 'medium', xp: 65,
       starter: 'nums = [3, 7, 2, 9, 4]\n# Find and print the largest\n',
-      hint: 'print(max(nums))',
+      hint: 'Python has a built-in function that finds the biggest value in a list. Its name is exactly what you\'d guess...',
       check(o) { return o.trim() === '9'; } },
     { id: 'pyc_pyramid', title: 'Star Pyramid', desc: 'Print 5 rows: *, **, ***, ****, *****', difficulty: 'medium', xp: 70,
       starter: '# Build a star pyramid with 5 rows\n',
-      hint: 'for i in range(1, 6):\n    print("*" * i)',
+      hint: 'In Python you can multiply a string by a number: "*" * 3 gives "***". Use that in a loop!',
       check(o) { return o.trim() === '*\n**\n***\n****\n*****'; } },
     { id: 'pyc_factorial', title: 'Factorial', desc: 'Calculate 5! (5*4*3*2*1 = 120).', difficulty: 'hard', xp: 80,
       starter: '# Calculate 5!\n',
-      hint: 'result = 1\nfor i in range(1, 6):\n    result *= i\nprint(result)',
+      hint: 'Start with a result of 1 and multiply it by each number from 1 to 5 using a loop.',
       check(o) { return o.trim() === '120'; } },
     { id: 'pyc_palindrome', title: 'Palindrome', desc: 'Check if "racecar" is a palindrome. Print True/False.', difficulty: 'hard', xp: 85,
       starter: 'word = "racecar"\n# Is it a palindrome?\n',
-      hint: 'print(word == word[::-1])',
+      hint: 'A palindrome reads the same forwards and backwards. What if you reversed the word and compared it to the original with ==?',
       check(o) { return o.trim() === 'True'; } }
 ];
 
